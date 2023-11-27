@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../thirdparty/opencv_481/build/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../thirdparty/opencv_481/build/include;../thirdparty/opencv_481/build/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -131,7 +131,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\USER\Downloads\opencv\build\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../thirdparty/opencv_481/build/include;C:\Users\USER\Downloads\opencv\build\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="InspectContamination.cpp" />
     <ClCompile Include="Inspection.cpp" />
     <ClCompile Include="InspectScratch.cpp" />
     <ClCompile Include="InspGeneric.cpp" />
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="InspectContamination.h" />
     <ClInclude Include="Inspection.h" />
     <ClInclude Include="InspectScratch.h" />
     <ClInclude Include="InspGeneric.h" />
