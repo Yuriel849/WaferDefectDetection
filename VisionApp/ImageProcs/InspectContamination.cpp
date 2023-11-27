@@ -13,7 +13,6 @@ InspectContamination::~InspectContamination()
 
 int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, void* pUserData)
 {
-	std::cout << "HERE" << std::endl;
 	cv::Mat src_gray_search = src;
 	cv::Mat src_draw = drawColor;
 	
