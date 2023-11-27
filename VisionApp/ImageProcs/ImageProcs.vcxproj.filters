@@ -46,6 +46,12 @@
     <Filter Include="소스 파일\[Project] Wafer Defect Detection">
       <UniqueIdentifier>{bad1c57b-ed0e-4264-be4d-d4e7ecd3a518}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{4755665c-7abb-4349-aeae-30816a3da9f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inspections">
+      <UniqueIdentifier>{eb820ed3-4ad2-40ae-9d8c-fa2047d73708}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImageProcs.cpp">
@@ -54,10 +60,25 @@
     <ClCompile Include="Project_Wafer_Defect_Detection.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Inspection.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectScratch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="InspGeneric.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Inspection.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectScratch.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
