@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{cf14fe77-ac8b-4785-a530-36a125d542e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ISP">
+      <UniqueIdentifier>{047a2ee4-66a0-4f59-9603-865cf3b15023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01_Basics">
+      <UniqueIdentifier>{015d0932-5c2d-467b-bd1c-58c902bf406f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\02_Colors">
+      <UniqueIdentifier>{18117926-c8f5-4d18-bba9-0a661cc2fac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03_Filters">
+      <UniqueIdentifier>{50c781b3-5e43-4662-b263-bbf9c6ae98f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04_Contours">
+      <UniqueIdentifier>{29f9c15b-e730-4cb3-b224-175a0034870c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05_Morphology">
+      <UniqueIdentifier>{bd454124-853a-4f2b-8eb3-036feb4dcca1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\06_TemplateMatching">
+      <UniqueIdentifier>{45cd39a4-8715-43f1-8959-4d358d3b9b84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Exercises">
+      <UniqueIdentifier>{8c4afa9a-f60d-4019-b802-ecd06cfa0c82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\WaferDetection">
+      <UniqueIdentifier>{1fa5aed8-e5d6-4ffc-a8eb-881c7f636c89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\[Project] Wafer Defect Detection">
+      <UniqueIdentifier>{bad1c57b-ed0e-4264-be4d-d4e7ecd3a518}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ImageProcs.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Project_Wafer_Defect_Detection.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
