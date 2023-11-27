@@ -60,6 +60,14 @@ void MatchingMethod(const Mat& serch_img, const Mat& ptrn_img, const double& thr
 
 void main()
 {
+	//inspection :: scratch
+	//각 class 만들어서
+	//해당 클래스 인스턴스를 이용하여 검사를 수행한다.
+
+	return;
+
+
+
 	// -- Scratch detection
 	//cv::Mat src_draw = cv::imread(Donut_Black, cv::ImreadModes::IMREAD_ANYCOLOR);	// 지금 읽을 이미지 
 	//cv::Mat src_flawless = cv::imread(Flawless, cv::ImreadModes::IMREAD_GRAYSCALE);

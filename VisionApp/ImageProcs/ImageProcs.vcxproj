@@ -143,9 +143,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ImageProcs.cpp" />
     <ClCompile Include="Inspection.cpp" />
     <ClCompile Include="InspectScratch.cpp" />
+    <ClCompile Include="InspGeneric.cpp" />
     <ClCompile Include="Project_Wafer_Defect_Detection.cpp" />
   </ItemGroup>
   <ItemGroup>

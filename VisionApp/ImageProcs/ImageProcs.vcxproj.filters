@@ -54,17 +54,17 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ImageProcs.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Project_Wafer_Defect_Detection.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Inspection.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
-    <ClCompile Include="InspectScratch.cpp">
+    <ClCompile Include="InspGeneric.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectScratch.cpp">
+      <Filter>Inspections</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -78,7 +78,7 @@
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="InspectScratch.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Inspections</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
