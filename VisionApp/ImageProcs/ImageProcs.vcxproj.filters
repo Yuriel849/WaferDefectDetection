@@ -40,7 +40,7 @@
       <Filter>Inspections</Filter>
     </ClCompile>
     <ClCompile Include="InspectContamination.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Inspections</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +57,7 @@
       <Filter>Inspections</Filter>
     </ClInclude>
     <ClInclude Include="InspectContamination.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Inspections</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
