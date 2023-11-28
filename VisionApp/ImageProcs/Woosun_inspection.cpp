@@ -66,7 +66,6 @@ void MatchingMethod(const Mat& serch_img, const Mat& ptrn_img, const double& thr
 	}
 }
 
-
 void draw_line(cv::Mat& img, cv::Point pt1, cv::Point pt2, cv::Scalar color, int thickness, std::string style, int gap)
 {
 #if 1
@@ -114,7 +113,6 @@ void draw_line(cv::Mat& img, cv::Point pt1, cv::Point pt2, cv::Scalar color, int
 	}
 #endif
 }
-
 
 void ScratchDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv::Mat& fill_img)
 {
@@ -225,7 +223,7 @@ void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv:
 		Mat SE = cv::getStructuringElement(shape, sz); // 
 		Mat src_open; //노이즈가 제거된 상태.
 		int type = MorphTypes::MORPH_OPEN; // 노이즈를 제거하는 기능 MORPH_OPEN을 type에 담겠다.
-		cv::morphologyEx(binCrack, src_open, type, SE);// cv::morphologyEx(src_bin(입력), src_open(출력), type, SE);//morphologyEx 노이즈를 제거하겠다. 
+		cv::morphologyEx(binCrack, src_open, type, SE);// cv::morphologyEx(src_bin(입력), src_open(출력), type, SE); // morphologyEx 노이즈를 제거하겠다. 
 
 		cv::findContours(src_open, contours_crack, hierarchy_crack, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
@@ -273,10 +271,9 @@ void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv:
 				}
 			}
 		}
-
 		int stop = 0;
 	}
-}		//break point
+}
 
 void main()
 {
