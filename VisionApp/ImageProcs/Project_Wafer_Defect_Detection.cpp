@@ -1,6 +1,6 @@
 #include "Common.h"
 #include "Inspection.h"
-#include "InspectContamination.h"
+#include "InspectContaminationRe.h"
 
 const string TEMPLATE = "./res/img/wafer_template.png";
 const string FLAWLESS = "./res/img/final_real_wafer.png";
@@ -65,10 +65,10 @@ void main()
 	//inspection :: scratch
 	//각 class 만들어서
 	//해당 클래스 인스턴스를 이용하여 검사를 수행한다.
-	InspectContamination contamination;
+	InspectContaminationRe contamination;
 
-	cv::Mat src = cv::imread(DONUT_BLACK, cv::ImreadModes::IMREAD_GRAYSCALE);
-	cv::Mat drawColor = cv::imread(DONUT_BLACK, cv::ImreadModes::IMREAD_ANYCOLOR);
+	cv::Mat src = cv::imread(DONUT_NAVY, cv::ImreadModes::IMREAD_GRAYSCALE);
+	cv::Mat drawColor = cv::imread(DONUT_NAVY, cv::ImreadModes::IMREAD_ANYCOLOR);
 
 	contamination.OnTestProcess(src, drawColor, NULL);
 

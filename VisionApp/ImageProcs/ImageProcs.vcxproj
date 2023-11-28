@@ -148,6 +148,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="InspectContamination.cpp" />
+    <ClCompile Include="InspectContaminationRe.cpp" />
     <ClCompile Include="Inspection.cpp" />
     <ClCompile Include="InspectScratch.cpp" />
     <ClCompile Include="InspGeneric.cpp" />
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="InspectContamination.h" />
+    <ClInclude Include="InspectContaminationRe.h" />
     <ClInclude Include="Inspection.h" />
     <ClInclude Include="InspectScratch.h" />
     <ClInclude Include="InspGeneric.h" />
