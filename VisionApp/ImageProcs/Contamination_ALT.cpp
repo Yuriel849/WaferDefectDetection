@@ -2,84 +2,77 @@
 
 void main()
 {
-
     {
-
-        std::string filePath_Ptrn = "./res/img/wafer_template.png"; //타깃 이미지
-        cv::Mat src_gray_ptrn = cv::imread(filePath_Ptrn, cv::ImreadModes::IMREAD_GRAYSCALE); //타깃 이미지 흑백으로 로딩
+        std::string filePath_Ptrn = "./res/img/wafer_template.png"; // Target image
+        cv::Mat src_gray_ptrn = cv::imread(filePath_Ptrn, cv::ImreadModes::IMREAD_GRAYSCALE); // Load target image in grayscale
         Mat draw_Pads;
-        cvtColor(src_gray_ptrn, draw_Pads, COLOR_GRAY2BGR); //draw_Pads
+        cvtColor(src_gray_ptrn, draw_Pads, COLOR_GRAY2BGR); // Convert grayscale to color to draw on
 
         Mat Pads_Region;
         double obj_PAD_threshold = 130;
         cv::threshold(src_gray_ptrn, Pads_Region, obj_PAD_threshold, 255, ThresholdTypes::THRESH_BINARY);
-        vector<vector<Point>> contours; //새롭게 범위값을 구하기 위해 백터 포인트 변수 contourss 생성
-        vector<Vec4i> hierarchy; //백터 hierarchyy변수 생성
-        cv::findContours(Pads_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //객체 범위값을 구하기 위해 객체 외곽선 검출
+        vector<vector<Point>> contours;
+        vector<Vec4i> hierarchy;
+        cv::findContours(Pads_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
         vector<cv::Rect> vRois_Small, vRois_Large;
         for (size_t k = 0; k < contours.size(); k++)
         {
-            RotatedRect rrt = minAreaRect(contours[k]);//객체 외곽선을 넘지 않을 만큼 의 사이즈를 wRrt에 담아줌
-            Rect rt = rrt.boundingRect(); // 객체의 위치에 상관없이 정방향 사각형 생성
-            //위 정사각형 생성 이후 특정 길이 추출
-            if (13 <= rt.width && rt.width <= 17)//객체 각 small 사이즈 rt길이 13이상 17이하인 경우
+            RotatedRect rrt = minAreaRect(contours[k]); // Minimum area rectangle encompassing the contour area
+            Rect rt = rrt.boundingRect(); // Straight rectangle encompassing the minimum area rectangle
+            // Create a rectangle then extract specific lengths
+            if (13 <= rt.width && rt.width <= 17) // Width of small squares at the bottom of the target image
             {
 
-                vRois_Small.push_back(rt); //각 세부Small 객체 출력
-                cv::rectangle(draw_Pads, rrt.boundingRect(), CV_RGB(0, 255, 0), 1); //rrt.boundingRect()위에서 구한 사각형 값에 사각형을 그려줌
+                vRois_Small.push_back(rt);
+                cv::rectangle(draw_Pads, rrt.boundingRect(), CV_RGB(0, 255, 0), 1);
             }
-            if (18 <= rt.width && rt.width <= 22)//객체 각 small 사이즈 rt길이 18이상 22이하인 경우
+            if (18 <= rt.width && rt.width <= 22) // Width of large squares at the top of the target image
             {
 
-                vRois_Large.push_back(rt); //각 Large세부 객체 출력
-                cv::rectangle(draw_Pads, rrt.boundingRect(), CV_RGB(0, 0, 255), 1); //rrt.boundingRect()위에서 구한 사각형 값에 사각형을 그려줌
+                vRois_Large.push_back(rt);
+                cv::rectangle(draw_Pads, rrt.boundingRect(), CV_RGB(0, 0, 255), 1);
             }
         }
 
+        std::string filePath_Search = "./res/img/edge_location_black.png"; // Image to search
 
+        cv::Mat src_draw = cv::imread(filePath_Search, cv::ImreadModes::IMREAD_ANYCOLOR); // Load image in color
+        cv::Mat src_gray_search = cv::imread(filePath_Search, cv::ImreadModes::IMREAD_GRAYSCALE); // Load image in grayscale
 
-
-        std::string filePath_Search = "./res/img/edge_location_black.png"; //원본이미지
-
-        cv::Mat src_draw = cv::imread(filePath_Search, cv::ImreadModes::IMREAD_ANYCOLOR); //원본이미지 컬러로 로딩
-        cv::Mat src_gray_search = cv::imread(filePath_Search, cv::ImreadModes::IMREAD_GRAYSCALE); //원본이미지 흑백으로 로딩
-
-        //find objects
-        vector<cv::Rect> vRois; //전체 이미지 백터 배열로 저장
+        // Find target images in the image to search
+        vector<cv::Rect> vRois;
         Mat obj_Region;
-        Point ptThrehold = Point(888, 150); //이진화된 배경 색보다 밝을 경우 차이를 주기 위해 배경 위치 값 포인터로 설정 
-        double min_threshold = src_gray_search.data[ptThrehold.y * src_gray_search.cols + ptThrehold.x] + 5; //배경색보다 밝을 부분 설정하여
-        cv::threshold(src_gray_search, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);// obj_Region에 이진화 작업
-        contours.clear(); //새롭게 범위값을 구하기 위해 백터 포인트 변수 contourss 생성
-        hierarchy.clear(); //백터 hierarchyy변수 생성
-        cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //객체 범위값을 구하기 위해 객체 외곽선 검출
-        for (size_t k = 0; k < contours.size(); k++) //contourss.size();의 크기만큼 for문을 돌린다.(새롭게 정의된 객체 사이즈(수) 
+        Point ptThrehold = Point(888, 150); // Use the background color (green) as the threshold value for binarization
+        double min_threshold = src_gray_search.data[ptThrehold.y * src_gray_search.cols + ptThrehold.x] + 5; // The color value at the point + 5
+        cv::threshold(src_gray_search, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);
+        contours.clear(); // Clear vector to reuse
+        hierarchy.clear(); // Clear vector to reuse
+        cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); // Find contours of objects (target images)
+        for (size_t k = 0; k < contours.size(); k++)
         {
             double area = contourArea(contours[k]);
-
-            RotatedRect rrt = minAreaRect(contours[k]);//객체 외곽선을 넘지 않을 만큼 의 사이즈를 wRrt에 담아줌
-            Rect rt = rrt.boundingRect(); // 객체의 위치에 상관없이 정방향 사각형 생성
+            RotatedRect rrt = minAreaRect(contours[k]);
+            Rect rt = rrt.boundingRect();
 
             if (160 <= rt.width && rt.width <= 180)
-            {
+            {3.
 
                 vRois.push_back(rt);
-                cv::rectangle(src_draw, rrt.boundingRect(), CV_RGB(255, 0, 0), 1); //src_openn에서 찾아낸 객체의 외곽선 부분의 wR2f.tl() 좌상 꼭지점과
+                cv::rectangle(src_draw, rrt.boundingRect(), CV_RGB(255, 0, 0), 1);
             }
         }
 
-
-        //sub chips
-        vector<cv::Rect> vRois_Small_Err, vRois_Large_Err; // 스몰 객체, 라지 객체 검출 저장을 위한 백터 설정
-        for (size_t k = 0; k < vRois.size(); k++) // 전체 이미지 객체vRois.size()의 개수만큼 for문을 돌린다.(새롭게 정의된 객체 사이즈(수) 
+        // Sub chips
+        vector<cv::Rect> vRois_Small_Err, vRois_Large_Err; // Vectors to store located small and large ROIs
+        for (size_t k = 0; k < vRois.size(); k++)
         {
-            Mat sub_img = src_gray_search(vRois[k]).clone(); // vRois[k]번째 객체 sub_img에 삽입 
+            Mat sub_img = src_gray_search(vRois[k]).clone();
             Mat sub_img_draw;
             cvtColor(sub_img, sub_img_draw, COLOR_GRAY2BGR); //
-            //large pad
-            int inflate = 7; //객체 rect 좌우 위치 오차를 줄이기 위해 7만큼 옮기기 위한 변수 설정
-            for (size_t i = 0; i < vRois_Large.size(); i++) // 세부 라지 객체 사이즈만큼 반복
+            // Large pad
+            int inflate = 7; // 객체 rect 좌우 위치 오차를 줄이기 위해 7만큼 옮기기 위한 변수 설정
+            for (size_t i = 0; i < vRois_Large.size(); i++) // Repeat as many times as the large objects exist
             {
                 Rect rt = vRois_Large[i]; // 세부 라지객체 i번째 rt에 담음
                 rt.x -= inflate; // 세부 라지객체 i번째의 x위치에서 7만큼 빼서 좌로 이동

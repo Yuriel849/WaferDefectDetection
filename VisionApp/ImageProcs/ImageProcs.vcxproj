@@ -143,7 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Contamination_ALT.cpp" />
+    <ClCompile Include="Contamination_ALT.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="InspectContamination.cpp" />
     <ClCompile Include="Inspection.cpp" />
     <ClCompile Include="InspectScratch.cpp" />
