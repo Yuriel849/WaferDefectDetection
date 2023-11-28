@@ -3,14 +3,15 @@
 #include "Common.h"
 
 
-std::string filePath_Search = "../KCCImageNet/Wafer_detecting/final_real_wafer.png";
-std::string filePath_Templt = "../KCCImageNet/Wafer_detecting/wafer_template.png";
+std::string filePath_Search = "./res/img/final_real_wafer.png";
+std::string filePath_Templt = "./res/img/wafer_template.png";
 
-std::string filePath_Donut = "../KCCImageNet/Wafer_detecting/donut_black.png";
-std::string filePath_Edge_Location = "../KCCImageNet/Wafer_detecting/edge_location_black.png";
-std::string filePath_Location = "../KCCImageNet/Wafer_detecting/location_black.png";
-std::string filePath_Scratch = "../KCCImageNet/Wafer_detecting/scratch_black.png";
+std::string filePath_Donut = "./res/img/donut_black.png";
+std::string filePath_Edge_Location = "./res/img/edge_location_black.png";
+std::string filePath_Location = "./res/img/location_black.png";
+std::string filePath_Scratch = "./res/img/scratch_black.png";
 
+// Below does not exist on this system (Yuriel)
 std::string filePath_Scratch_Green = "../KCCImageNet/Wafer_detecting/real_end/Scratch_green.bmp";
 std::string filePath_Location_Green = "../KCCImageNet/Wafer_detecting/real_end/Location_green.png";
 std::string filePath_Edge_Location_Navy = "../KCCImageNet/Wafer_detecting/real_end/Edge_location_navy.png";
@@ -304,11 +305,12 @@ vector<Rect> ContaminationDetect(vector<Rect>& find, cv::Mat& flawless_img, cv::
 
 	vector<vector<Point>> contours_con; //하나의 chip 안에 큰 네모, 작은 네모 point들 확인할 contour 
 	vector<Vec4i> hierarchy; //백터 hierarchy변수 생성
-	vector<cv::Rect> vRoisLnS,vRois_Small, vRois_Large; //하나의 chip 안에 큰 네모, 작은 네모 각각의 벡터 
+	vector<cv::Rect> vRoisLnS, vRois_Small, vRois_Large; //하나의 chip 안에 큰 네모, 작은 네모 각각의 벡터 
 	Mat sub_img; //chip 하나 들어갈 이미지 (gray)
 	bool  checkBig, checkSmall;
 	for (size_t k = 0; k < find.size(); k++) //wafer 안의 chip 개수 만큼 for문 돌리기 
-	{	sub_img = search_img(find[k]).clone();
+	{
+		sub_img = search_img(find[k]).clone();
 		Mat sub_img_draw;
 		cv::cvtColor(sub_img, sub_img_draw, COLOR_GRAY2BGR); //chip 에 네모들 그릴 이미지 
 
@@ -320,9 +322,9 @@ vector<Rect> ContaminationDetect(vector<Rect>& find, cv::Mat& flawless_img, cv::
 
 		cv::threshold(sub_img, sub_img_draw, 130, 255, ThresholdTypes::THRESH_BINARY);
 		cv::findContours(sub_img_draw, contours_con, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //객체 범위값을 구하기 위해 객체 외곽선 검출
-		
+
 		int check1 = 0;
-		
+
 
 		for (size_t k = 0; k < contours_con.size(); k++)
 		{
@@ -343,15 +345,15 @@ vector<Rect> ContaminationDetect(vector<Rect>& find, cv::Mat& flawless_img, cv::
 
 		}
 		int check3 = 1;
-		checkBig = (vRois_Small.size() %10 == 0);
-		checkSmall = (vRois_Large.size() %4 == 0);
+		checkBig = (vRois_Small.size() % 10 == 0);
+		checkSmall = (vRois_Large.size() % 4 == 0);
 		vRois_Small.clear();
 		vRois_Large.clear();
 		if (!(checkSmall && checkBig)) //small 10, big 4 
 		{
 			find_contamination.push_back(find[k]);
 		}
-		
+
 	}
 
 	return find_contamination;
@@ -361,7 +363,7 @@ Point pointTL(Rect rect)
 {
 	int pointXtl = rect.tl().x;
 	int pointYtl = rect.tl().y;
-	
+
 	return Point(pointXtl, pointYtl);
 }
 
@@ -370,7 +372,7 @@ int indexTL(Rect rect)
 {
 	int pointXtl = rect.tl().x;
 	int pointYtl = rect.tl().y;
-	int index = rect.tl().x + ((rect.tl().x +1)* rect.tl().y);
+	int index = rect.tl().x + ((rect.tl().x + 1) * rect.tl().y);
 
 	return index;
 }
@@ -379,101 +381,130 @@ void main()
 {
 	cv::Mat src_flawless = cv::imread(filePath_Search, cv::ImreadModes::IMREAD_GRAYSCALE);		//비교할 완성품
 	cv::Mat src_gray_templt = cv::imread(filePath_Templt, cv::ImreadModes::IMREAD_GRAYSCALE);	//템플릿
-	cv::Mat src_gray_search = cv::imread(filePath_Scratch_Green, cv::ImreadModes::IMREAD_GRAYSCALE);	//
-	cv::Mat src_draw = cv::imread(filePath_Scratch_Green, cv::ImreadModes::IMREAD_ANYCOLOR);	//
+	cv::Mat src_gray_search = cv::imread(filePath_Donut, cv::ImreadModes::IMREAD_GRAYSCALE);	//
+	cv::Mat src_draw = cv::imread(filePath_Donut, cv::ImreadModes::IMREAD_ANYCOLOR);	//
 	cv::Mat src_filled = src_draw.clone();
 
-	
-		vector<Rect> scratch_error, crack_error,contamination_finish_not;
-		vector<Rect> contamination_error;
-		//vector<int> scratchTL, crackTL, conTL;
-		vector<Point> scratchTL, crackTL, conTL;
 
-		//find objects
-		vector<cv::Rect> vRois;
-		Mat obj_Region;
-		Point ptThrehold = Point(888, 150);
-		double min_threshold = src_gray_search.data[ptThrehold.y * src_gray_search.cols + ptThrehold.x] + 5;
-		cv::threshold(src_gray_search, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);
-		vector<vector<Point>> contours;
-		vector<Vec4i> hierarchy;
-		cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //객체 범위값을 구하기 위해 객체 외곽선 검출
-		for (size_t k = 0; k < contours.size(); k++) //contourss.size();의 크기만큼 for문을 돌린다.(새롭게 정의된 객체 사이즈(수) 
+	vector<Rect> scratch_error, crack_error, contamination_finish_not;
+	vector<Rect> contamination_error;
+	//vector<int> scratchTL, crackTL, conTL;
+	vector<Point> scratchTL, crackTL, conTL;
+
+	//find objects
+	vector<cv::Rect> vRois;
+	Mat obj_Region;
+	Point ptThrehold = Point(888, 150);
+	double min_threshold = src_gray_search.data[ptThrehold.y * src_gray_search.cols + ptThrehold.x] + 5;
+	cv::threshold(src_gray_search, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);
+	vector<vector<Point>> contours;
+	vector<Vec4i> hierarchy;
+	cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //객체 범위값을 구하기 위해 객체 외곽선 검출
+	for (size_t k = 0; k < contours.size(); k++) //contourss.size();의 크기만큼 for문을 돌린다.(새롭게 정의된 객체 사이즈(수) 
+	{
+		double area = contourArea(contours[k]);
+
+		RotatedRect rrt = minAreaRect(contours[k]);//객체 외곽선을 넘지 않을 만큼 의 사이즈를 wRrt에 담아줌
+		Rect rt = rrt.boundingRect(); // 객체의 위치에 상관없이 정방향 사각형 생성
+
+		double area_min = 180 * 180 - 180 * 180 * 0.1;
+		double area_max = 180 * 180 + 180 * 180 * 0.1;
+		if (area_min <= area && area <= area_max)
 		{
-			double area = contourArea(contours[k]);
 
-			RotatedRect rrt = minAreaRect(contours[k]);//객체 외곽선을 넘지 않을 만큼 의 사이즈를 wRrt에 담아줌
-			Rect rt = rrt.boundingRect(); // 객체의 위치에 상관없이 정방향 사각형 생성
+			vRois.push_back(rt);
+			cv::rectangle(src_draw, rrt.boundingRect(), CV_RGB(0, 0, 255), 1);
+		}
+	}
 
-			double area_min = 180 * 180 - 180 * 180 * 0.1;
-			double area_max = 180 * 180 + 180 * 180 * 0.1;
-			if (area_min <= area && area <= area_max)
+	scratch_error = ScratchDetect(vRois, src_gray_search, src_draw, src_filled);
+	for (int e = 0; e < scratch_error.size(); e++)
+	{
+		//scratchTL.push_back(indexTL(scratch_error[e])); 
+		scratchTL.push_back(pointTL(scratch_error[e]));
+	}
+	//sort(scratchTL.begin(),scratchTL.end());
+
+	crack_error = CrackDetect(vRois, src_gray_search, src_draw, src_filled);
+	for (int w = 0; w < crack_error.size(); w++)
+	{
+		//crackTL.push_back(indexTL(crack_error[w])); 
+		crackTL.push_back(pointTL(crack_error[w]));
+	}
+	//sort(crackTL.begin(), crackTL.end());
+
+
+	contamination_error = ContaminationDetect(vRois, src_flawless, src_gray_search, src_draw, src_filled);
+	for (int h = 0; h < contamination_error.size(); h++)
+	{
+		//conTL.push_back(indexTL(contamination_finish_not[h])); 
+		conTL.push_back(pointTL(contamination_error[h]));
+	}
+	//sort(conTL.begin(), conTL.end());
+
+	//scratch, crack 각각 비교 
+	////////////////////////
+	////////////////////////
+
+	bool csFlag = false;
+
+	for (size_t idx = 0; idx < contamination_error.size(); idx++)
+	{
+		for (size_t idxC = 0; idxC < crack_error.size(); idxC++)
+		{
+			int cX = crack_error.at(idxC).x;
+			int cY = crack_error.at(idxC).y;
+			if ((contamination_error.at(idx).x == cX) && (contamination_error.at(idx).y == cY))
 			{
-
-				vRois.push_back(rt);
-				cv::rectangle(src_draw, rrt.boundingRect(), CV_RGB(0, 0, 255), 1); 
+				csFlag = true;
+				break;
+			}
+			int a = 0;
+		}
+		for (size_t idxS = 0; idxS < scratch_error.size(); idxS++)
+		{
+			int sX = scratch_error.at(idxS).x;
+			int sY = scratch_error.at(idxS).y;
+			if ((contamination_error.at(idx).x == sX) && (contamination_error.at(idx).y == sY))
+			{
+				csFlag = true;
+				break;
 			}
 		}
-
-		scratch_error = ScratchDetect(vRois, src_gray_search, src_draw, src_filled);
-		for (int e = 0; e < scratch_error.size(); e++) 
-		{ 
-			//scratchTL.push_back(indexTL(scratch_error[e])); 
-			scratchTL.push_back(pointTL(scratch_error[e]));
-		}
-		//sort(scratchTL.begin(),scratchTL.end());
-
-		crack_error = CrackDetect(vRois, src_gray_search, src_draw, src_filled);
-		for (int w = 0; w < crack_error.size(); w++) 
-		{ 
-			//crackTL.push_back(indexTL(crack_error[w])); 
-			crackTL.push_back(pointTL(crack_error[w]));
-		}
-		//sort(crackTL.begin(), crackTL.end());
-		
-
-		contamination_finish_not = ContaminationDetect(vRois, src_flawless, src_gray_search, src_draw, src_filled);
-		for (int h = 0; h < contamination_finish_not.size(); h++) 
-		{ 
-			//conTL.push_back(indexTL(contamination_finish_not[h])); 
-			conTL.push_back(pointTL(contamination_finish_not[h]));
-		}
-		//sort(conTL.begin(), conTL.end());
-
-		//scratch, crack 각각 비교 
-		////////////////////////
-		////////////////////////
-
-		
-
-
-
-		//contamination_error:최종적으로 contamination error 담을 Rect형 벡터;
-
-
-
-
-		Scalar color_con(255, 255, 121);
-		string con = "Contamination";
-		int con_num = 1;
-		string msg;
-		msg = to_string(con_num);
-
-		for (int x = 0; x < contamination_error.size(); x++)
+		if (csFlag == true)
 		{
-			cv::putText(src_draw, msg, contamination_error[x].br(), FONT_HERSHEY_SIMPLEX, 0.5, color_con, 1.5, 8);		//0, 255, 255
-			cv::putText(src_draw, con, contamination_error[x].tl(), FONT_HERSHEY_SIMPLEX, 0.5, color_con, 1.5, 8);
-			cv::rectangle(src_filled, contamination_error[x], color_con, CV_FILLED);
-
-
-			cv::Point rtPts[4] = { contamination_error[x].tl(), Point(contamination_error[x].tl().x + contamination_error[x].width, contamination_error[x].tl().y),
-			contamination_error[x].br(), Point(contamination_error[x].tl().x, contamination_error[x].br().y) };
-			for (size_t c = 0; c < contamination_error.size(); c++)
-			{
-				draw_line(src_draw, rtPts[c % 4], rtPts[(c + 1) % 4], color_con, 2, "", 3);
-			}
+			csFlag = false;
+			contamination_error.erase(contamination_error.begin() + idx);
+			idx--;
 		}
-		
-		int a1 = 0;
-	
+	}
+
+	//contamination_error:최종적으로 contamination error 담을 Rect형 벡터;
+
+
+
+
+	Scalar color_con(255, 255, 121);
+	string con = "Contamination";
+	int con_num = 1;
+	string msg;
+	msg = to_string(con_num);
+
+	for (int x = 0; x < contamination_error.size(); x++)
+	{
+		cv::putText(src_draw, msg, contamination_error[x].br(), FONT_HERSHEY_SIMPLEX, 0.5, color_con, 1.5, 8);		//0, 255, 255
+		cv::putText(src_draw, con, contamination_error[x].tl(), FONT_HERSHEY_SIMPLEX, 0.5, color_con, 1.5, 8);
+		cv::rectangle(src_filled, contamination_error[x], color_con, CV_FILLED);
+
+
+		cv::Point rtPts[4] = { contamination_error[x].tl(), Point(contamination_error[x].tl().x + contamination_error[x].width, contamination_error[x].tl().y),
+		contamination_error[x].br(), Point(contamination_error[x].tl().x, contamination_error[x].br().y) };
+		for (size_t c = 0; c < contamination_error.size(); c++)
+		{
+			draw_line(src_draw, rtPts[c % 4], rtPts[(c + 1) % 4], color_con, 2, "", 3);
+		}
+	}
+
+	int a1 = 0;
+
 }

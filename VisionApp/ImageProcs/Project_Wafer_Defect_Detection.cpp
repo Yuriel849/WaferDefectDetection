@@ -68,8 +68,12 @@ void main()
 	InspectContaminationRe contamination;
 
 	cv::Mat src = cv::imread(DONUT_NAVY, cv::ImreadModes::IMREAD_GRAYSCALE);
-	cv::Mat drawColor = cv::imread(DONUT_NAVY, cv::ImreadModes::IMREAD_ANYCOLOR);
+	cv::Mat drawColor = cv::imread(DONUT_NAVY, cv::ImreadModes::IMREAD_UNCHANGED);
 
+	// Wafer overall color average
+	Scalar avg = cv::mean(drawColor);
+
+	int a = 0; 
 	contamination.OnTestProcess(src, drawColor, NULL);
 
 	namedWindow("Contamination view", WINDOW_NORMAL);
