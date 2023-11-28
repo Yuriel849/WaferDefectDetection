@@ -56,7 +56,7 @@ void main()
             Rect rt = rrt.boundingRect();
 
             if (160 <= rt.width && rt.width <= 180)
-            {3.
+            {
 
                 vRois.push_back(rt);
                 cv::rectangle(src_draw, rrt.boundingRect(), CV_RGB(255, 0, 0), 1);

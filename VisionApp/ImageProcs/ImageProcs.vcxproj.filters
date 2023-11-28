@@ -45,6 +45,12 @@
     <ClCompile Include="Contamination_ALT.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="InspectContaminationRe.cpp">
+      <Filter>Inspections</Filter>
+    </ClCompile>
+    <ClCompile Include="Woosun_inspection.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -60,6 +66,9 @@
       <Filter>Inspections</Filter>
     </ClInclude>
     <ClInclude Include="InspectContamination.h">
+      <Filter>Inspections</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectContaminationRe.h">
       <Filter>Inspections</Filter>
     </ClInclude>
   </ItemGroup>
