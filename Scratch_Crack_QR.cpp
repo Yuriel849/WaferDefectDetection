@@ -68,7 +68,7 @@ void draw_line(cv::Mat& img, cv::Point pt1, cv::Point pt2, cv::Scalar color, int
 
 void ScratchDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv::Mat& fill_img)
 {
-	// find			 올바른 좌표 배열 
+	// find			 좌표 배열 
 	// search_img	 탐색할 이미지 IMREAD_GRAYSCALE
 	// draw_img		 사각형 그릴 이미지 IMREAD_ANYCOLOR
 	// fill_img	     색 채울 이미지 IMREAD_ANYCOLOR
@@ -146,7 +146,7 @@ void ScratchDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, c
 
 void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv::Mat& fill_img)
 {
-	// find			올바른 좌표 배열 
+	// find			좌표 배열 
 	// search_img	 탐색할 이미지 IMREAD_GRAYSCALE
 	// draw_img		 사각형 그릴 이미지 IMREAD_ANYCOLOR
 	// fill_img	     색 채울 이미지 IMREAD_ANYCOLOR
