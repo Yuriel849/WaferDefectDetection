@@ -12,10 +12,10 @@ std::string filePath_Location = "./res/img/location_black.png";
 std::string filePath_Scratch = "./res/img/scratch_black.png";
 
 // Below does not exist on this system (Yuriel)
-std::string filePath_Scratch_Green = "../KCCImageNet/Wafer_detecting/real_end/Scratch_green.bmp";
-std::string filePath_Location_Green = "../KCCImageNet/Wafer_detecting/real_end/Location_green.png";
-std::string filePath_Edge_Location_Navy = "../KCCImageNet/Wafer_detecting/real_end/Edge_location_navy.png";
-std::string filePath_Donut_Navy = "../KCCImageNet/Wafer_detecting/real_end/Donut_navy.png";
+std::string filePath_Scratch_Green = "./res/img/Scratch_green.bmp";
+std::string filePath_Location_Green = "./res/img/Location_green.bmp";
+std::string filePath_Edge_Location_Navy = "./res/img/Edge_location_navy.bmp";
+std::string filePath_Donut_Navy = "./res/img/Donut_navy.bmp";
 
 
 void MatchingMethod(const Mat& serch_img, const Mat& ptrn_img, const double& thres, vector<Rect>& rois)
@@ -381,8 +381,8 @@ void main()
 {
 	cv::Mat src_flawless = cv::imread(filePath_Search, cv::ImreadModes::IMREAD_GRAYSCALE);		//비교할 완성품
 	cv::Mat src_gray_templt = cv::imread(filePath_Templt, cv::ImreadModes::IMREAD_GRAYSCALE);	//템플릿
-	cv::Mat src_gray_search = cv::imread(filePath_Donut, cv::ImreadModes::IMREAD_GRAYSCALE);	//
-	cv::Mat src_draw = cv::imread(filePath_Donut, cv::ImreadModes::IMREAD_ANYCOLOR);	//
+	cv::Mat src_gray_search = cv::imread(filePath_Scratch_Green, cv::ImreadModes::IMREAD_GRAYSCALE);	//
+	cv::Mat src_draw = cv::imread(filePath_Scratch_Green, cv::ImreadModes::IMREAD_ANYCOLOR);	//
 	cv::Mat src_filled = src_draw.clone();
 
 
@@ -400,6 +400,7 @@ void main()
 	vector<vector<Point>> contours;
 	vector<Vec4i> hierarchy;
 	cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //객체 범위값을 구하기 위해 객체 외곽선 검출
+
 	for (size_t k = 0; k < contours.size(); k++) //contourss.size();의 크기만큼 for문을 돌린다.(새롭게 정의된 객체 사이즈(수) 
 	{
 		double area = contourArea(contours[k]);
@@ -486,12 +487,13 @@ void main()
 
 	Scalar color_con(255, 255, 121);
 	string con = "Contamination";
-	int con_num = 1;
+	int con_num = 0;
 	string msg;
-	msg = to_string(con_num);
 
 	for (int x = 0; x < contamination_error.size(); x++)
 	{
+		con_num += 1;
+		msg = to_string(con_num);
 		cv::putText(src_draw, msg, contamination_error[x].br(), FONT_HERSHEY_SIMPLEX, 0.5, color_con, 1.5, 8);		//0, 255, 255
 		cv::putText(src_draw, con, contamination_error[x].tl(), FONT_HERSHEY_SIMPLEX, 0.5, color_con, 1.5, 8);
 		cv::rectangle(src_filled, contamination_error[x], color_con, CV_FILLED);
@@ -506,5 +508,4 @@ void main()
 	}
 
 	int a1 = 0;
-
 }
