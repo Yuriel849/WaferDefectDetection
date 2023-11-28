@@ -14,7 +14,7 @@ std::string Location_Green = "../KCCImageNet/WaferProj/Location_green.bmp";
 std::string Donut_Navy = "../KCCImageNet/WaferProj/Donut_navy.bmp";
 std::string Edge_Location_Navy = "../KCCImageNet/WaferProj/Edge_location_navy.bmp";
 
-std::string TEST = "../KCCImageNet/WaferProj/Donut_navy.bmp";		// ´Ù¸¥ ÆÄÀÏÀ» »¡¸® È®ÀÎÇÏ±â À§ÇØ¼­ ¼±¾ğ, ÆÄÀÏ¸í¸¸ ¹Ù²Ù¸é ¹Ù·Î µ¿ÀÛ½ÃÅ³ ¼ö ÀÖµµ·Ï 
+std::string TEST = "../KCCImageNet/WaferProj/Donut_navy.bmp";		// ë‹¤ë¥¸ íŒŒì¼ì„ ë¹¨ë¦¬ í™•ì¸í•˜ê¸° ìœ„í•´ì„œ ì„ ì–¸, íŒŒì¼ëª…ë§Œ ë°”ê¾¸ë©´ ë°”ë¡œ ë™ì‘ì‹œí‚¬ ìˆ˜ ìˆë„ë¡ 
 
 
 void draw_line(cv::Mat& img, cv::Point pt1, cv::Point pt2, cv::Scalar color, int thickness, std::string style, int gap)
@@ -68,10 +68,10 @@ void draw_line(cv::Mat& img, cv::Point pt1, cv::Point pt2, cv::Scalar color, int
 
 void ScratchDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv::Mat& fill_img)
 {
-	// find			 MechingMethod()·Î °áÇÔ ¾ø´Â ÀÌ¹ÌÁö¸¦ ÅÛÇÃ¸´ Å½»öÇÏ¿© ¾òÀº, ¿Ã¹Ù¸¥ ÁÂÇ¥ ¹è¿­ 
-	// search_img	 Å½»öÇÒ ÀÌ¹ÌÁö IMREAD_GRAYSCALE
-	// draw_img		 »ç°¢Çü ±×¸± ÀÌ¹ÌÁö IMREAD_ANYCOLOR
-	// fill_img	     »ö Ã¤¿ï ÀÌ¹ÌÁö IMREAD_ANYCOLOR
+	// find			 ì˜¬ë°”ë¥¸ ì¢Œí‘œ ë°°ì—´ 
+	// search_img	 íƒìƒ‰í•  ì´ë¯¸ì§€ IMREAD_GRAYSCALE
+	// draw_img		 ì‚¬ê°í˜• ê·¸ë¦´ ì´ë¯¸ì§€ IMREAD_ANYCOLOR
+	// fill_img	     ìƒ‰ ì±„ìš¸ ì´ë¯¸ì§€ IMREAD_ANYCOLOR
 
 	RNG rng(12345);
 	vector<vector<Point>> contours_scratch;
@@ -104,7 +104,7 @@ void ScratchDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, c
 
 		else
 		{
-			for (size_t k = 0; k < contours_scratch.size(); k++) // contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+			for (size_t k = 0; k < contours_scratch.size(); k++) // contourss.size();ì˜ í¬ê¸°ë§Œí¼ forë¬¸ì„ ëŒë¦°ë‹¤.(ìƒˆë¡­ê²Œ ì •ì˜ëœ ê°ì²´ ì‚¬ì´ì¦ˆ(ìˆ˜) 
 			{
 				double area = contourArea(contours_scratch[k]);
 
@@ -146,10 +146,10 @@ void ScratchDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, c
 
 void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv::Mat& fill_img)
 {
-	// find			 MechingMethod()·Î °áÇÔ ¾ø´Â ÀÌ¹ÌÁö¸¦ ÅÛÇÃ¸´ Å½»öÇÏ¿© ¾òÀº, ¿Ã¹Ù¸¥ ÁÂÇ¥ ¹è¿­ 
-	// search_img	 Å½»öÇÒ ÀÌ¹ÌÁö IMREAD_GRAYSCALE
-	// draw_img		 »ç°¢Çü ±×¸± ÀÌ¹ÌÁö IMREAD_ANYCOLOR
-	// fill_img	     »ö Ã¤¿ï ÀÌ¹ÌÁö IMREAD_ANYCOLOR
+	// find			ì˜¬ë°”ë¥¸ ì¢Œí‘œ ë°°ì—´ 
+	// search_img	 íƒìƒ‰í•  ì´ë¯¸ì§€ IMREAD_GRAYSCALE
+	// draw_img		 ì‚¬ê°í˜• ê·¸ë¦´ ì´ë¯¸ì§€ IMREAD_ANYCOLOR
+	// fill_img	     ìƒ‰ ì±„ìš¸ ì´ë¯¸ì§€ IMREAD_ANYCOLOR
 
 	RNG rng(12345);
 	vector<vector<Point>> contours_crack;
@@ -171,14 +171,14 @@ void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv:
 		double thres_crack = search_img.at<uchar>(ptThreshold.y, ptThreshold.x) + 9;
 		cv::threshold(subImgCrack, binCrack, thres_crack, 255, ThresholdTypes::THRESH_BINARY_INV);
 
-		// morpology ³ëÀÌÁî Á¦°Å ºÎºĞ
-		int kernelSz = 2;		// ³ëÀÌÁî Å©±â
+		// morpology ë…¸ì´ì¦ˆ ì œê±° ë¶€ë¶„
+		int kernelSz = 2;		// ë…¸ì´ì¦ˆ í¬ê¸°
 		int shape = MorphShapes::MORPH_RECT;
-		cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); // Á¤lSz + 1) 
+		cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); // ì •lSz + 1) 
 		Mat SE = cv::getStructuringElement(shape, sz);
-		Mat src_open;		 // ³ëÀÌÁî°¡ Á¦°ÅµÈ »óÅÂ.
-		int type = MorphTypes::MORPH_OPEN;		// ³ëÀÌÁî¸¦ Á¦°ÅÇÏ´Â ±â´É MORPH_OPENÀ» type¿¡ ´ã°Ú´Ù.
-		cv::morphologyEx(binCrack, src_open, type, SE);// cv::morphologyEx(src_bin(ÀÔ·Â), src_open(Ãâ·Â), type, SE);//morphologyEx ³ëÀÌÁî¸¦ Á¦°ÅÇÏ°Ú´Ù. 
+		Mat src_open;		 // ë…¸ì´ì¦ˆê°€ ì œê±°ëœ ìƒíƒœ.
+		int type = MorphTypes::MORPH_OPEN;		// ë…¸ì´ì¦ˆë¥¼ ì œê±°í•˜ëŠ” ê¸°ëŠ¥ MORPH_OPENì„ typeì— ë‹´ê² ë‹¤.
+		cv::morphologyEx(binCrack, src_open, type, SE);// cv::morphologyEx(src_bin(ì…ë ¥), src_open(ì¶œë ¥), type, SE);//morphologyEx ë…¸ì´ì¦ˆë¥¼ ì œê±°í•˜ê² ë‹¤. 
 
 		cv::findContours(src_open, contours_crack, hierarchy_crack, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
@@ -192,7 +192,7 @@ void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv:
 
 		else
 		{
-			for (size_t k = 0; k < contours_crack.size(); k++)		// contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+			for (size_t k = 0; k < contours_crack.size(); k++)		// contourss.size();ì˜ í¬ê¸°ë§Œí¼ forë¬¸ì„ ëŒë¦°ë‹¤.(ìƒˆë¡­ê²Œ ì •ì˜ëœ ê°ì²´ ì‚¬ì´ì¦ˆ(ìˆ˜) 
 			{
 				double area = contourArea(contours_crack[k]);
 
@@ -233,8 +233,8 @@ void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv:
 
 void QR_Detect(cv::Mat& draw_img, cv::Mat& fill_img)
 {
-	// draw_img		 QR °ËÃâÇÒ ÀÌ¹ÌÁö IMREAD_ANYCOLOR
-	// fill_img	     QR °ËÃâÇÒ ÀÌ¹ÌÁö IMREAD_ANYCOLOR
+	// draw_img		 QR ê²€ì¶œí•  ì´ë¯¸ì§€ IMREAD_ANYCOLOR
+	// fill_img	     QR ê²€ì¶œí•  ì´ë¯¸ì§€ IMREAD_ANYCOLOR
 
 	QRCodeDetector QRdetector;   
 
