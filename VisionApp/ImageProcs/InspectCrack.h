@@ -1,13 +1,13 @@
 #pragma once
 #include "InspGeneric.h"
 
-class InspectContamination : public InspGeneric
+class InspectCrack : public InspGeneric
 {
 public:
-	InspectContamination();
-	~InspectContamination();
+	InspectCrack();
+	~InspectCrack();
 
 	int OnTestProcess(const Mat& src, const Mat& drawColor, void* pUserData) override;
 private:
+
 };
-#pragma once

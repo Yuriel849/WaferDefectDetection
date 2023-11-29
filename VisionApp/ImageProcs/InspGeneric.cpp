@@ -12,8 +12,3 @@ int InspGeneric::OnTestProcess(const Mat& src, const Mat& drawColor, void* pUser
 {
     return 0;
 }
-
-int InspGeneric::GetObjectRegionsTemplatMatching(const Mat& src, const Mat& ptrn, std::vector<cv::Rect>& vRegions)
-{
-    return 0;
-}

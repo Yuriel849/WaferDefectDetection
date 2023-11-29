@@ -8,9 +8,8 @@ public:
 	virtual ~InspGeneric();
 
 	virtual int OnTestProcess(const Mat& src, const Mat& drawColor, void* pUserData)=0;
-	virtual int GetObjectRegionsTemplatMatching(const Mat& src, const Mat& ptrn, std::vector<cv::Rect>& vRegions);
 protected:
 private:
-
+	const string PATTERN = "./res/img/wafer_template.png";
 };
 
