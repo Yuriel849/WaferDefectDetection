@@ -7,7 +7,7 @@ public:
 	InspectScratch();
 	~InspectScratch();
 
-	int OnTestProcess(const Mat& src, const Mat& drawColor, void* pUserData) override;
+	int OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect> vRegions) override;
 private:
 
 };

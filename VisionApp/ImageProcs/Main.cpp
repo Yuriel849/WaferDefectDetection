@@ -33,12 +33,14 @@ void main()
 	vInsps.push_back(&insp_crack);
 	vInsps.push_back(&insp_cont);
 
+	std::vector<cv::Rect> vRegions;
+
 
 	for (size_t i = 0; i < vInsps.size(); i++)
 	{
 		InspGeneric* pins = vInsps[i];
 
-		pins->OnTestProcess(src, drawing, NULL);
+		pins->OnTestProcess(src, drawing, vRegions);
 
 	}
 

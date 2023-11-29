@@ -22,7 +22,10 @@
     <Filter Include="Interface">
       <UniqueIdentifier>{4755665c-7abb-4349-aeae-30816a3da9f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Inspections">
+    <Filter Include="InspectHeader">
+      <UniqueIdentifier>{c654f006-6c55-4f5d-a290-be61135046ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InspectClass">
       <UniqueIdentifier>{eb820ed3-4ad2-40ae-9d8c-fa2047d73708}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -33,20 +36,17 @@
     <ClCompile Include="Inspection.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
-    <ClCompile Include="InspGeneric.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="InspectScratch.cpp">
-      <Filter>Inspections</Filter>
+      <Filter>InspectClass</Filter>
     </ClCompile>
     <ClCompile Include="InspectContamination.cpp">
-      <Filter>Inspections</Filter>
+      <Filter>InspectClass</Filter>
     </ClCompile>
     <ClCompile Include="Contamination_ALT.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="InspectContaminationRe.cpp">
-      <Filter>Inspections</Filter>
+      <Filter>InspectClass</Filter>
     </ClCompile>
     <ClCompile Include="Woosun_inspection.cpp">
       <Filter>소스 파일</Filter>
@@ -57,25 +57,37 @@
     <ClCompile Include="Woosun_inspection_3rd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="InspGeneric.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectCrack.cpp">
+      <Filter>InspectClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="InspGeneric.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="Inspection.h">
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="InspectScratch.h">
-      <Filter>Inspections</Filter>
-    </ClInclude>
-    <ClInclude Include="InspectContamination.h">
-      <Filter>Inspections</Filter>
+      <Filter>InspectHeader</Filter>
     </ClInclude>
     <ClInclude Include="InspectContaminationRe.h">
-      <Filter>Inspections</Filter>
+      <Filter>InspectHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectContamination.h">
+      <Filter>InspectHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="InspGeneric.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectCrack.h">
+      <Filter>InspectHeader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

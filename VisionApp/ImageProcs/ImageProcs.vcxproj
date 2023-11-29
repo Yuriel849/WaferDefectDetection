@@ -149,9 +149,11 @@
     </ClCompile>
     <ClCompile Include="InspectContamination.cpp" />
     <ClCompile Include="InspectContaminationRe.cpp" />
+    <ClCompile Include="InspectCrack.cpp" />
     <ClCompile Include="Inspection.cpp" />
     <ClCompile Include="InspectScratch.cpp" />
     <ClCompile Include="InspGeneric.cpp" />
+    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Project_Wafer_Defect_Detection.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -173,6 +175,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="InspectContamination.h" />
     <ClInclude Include="InspectContaminationRe.h" />
+    <ClInclude Include="InspectCrack.h" />
     <ClInclude Include="Inspection.h" />
     <ClInclude Include="InspectScratch.h" />
     <ClInclude Include="InspGeneric.h" />
