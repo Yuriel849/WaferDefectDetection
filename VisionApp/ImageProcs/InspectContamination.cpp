@@ -11,7 +11,7 @@ InspectContamination::~InspectContamination()
 
 }
 
-int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>& vRegions)
+int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>* vRegions)
 {
     float avg_Width_Large, avg_Height_Large, avg_Width_Small, avg_Height_Small;
 
@@ -137,7 +137,7 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
                 }
                 else
                 {
-                    vRegions.push_back(rt);
+                    vRegions->push_back(vRois[k]);
                     cnt_Large_Err++;
                     Rect rtSubErrRgn = rt; //조건에  충족하지 않은 rt값 rtSubErrRgn에 저장
                     rtSubErrRgn.x += vRois_Large[i].x - inflate; // x점 위치에 -7만큼 위치 조정
@@ -193,15 +193,11 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
                 if (((avg_Width_Small * 0.8) <= rt.width && rt.width <= (avg_Width_Small * 1.2))
                     && ((avg_Height_Small * 0.8) <= rt.height && rt.height <= (avg_Height_Small * 1.2)))
                 {
-                    Rect rtSubErrRgn = rt;
-                    rtSubErrRgn.x += vRois_Small[i].x - inflate;
-                    rtSubErrRgn.y += vRois_Small[i].y;
-                    cv::rectangle(sub_img_draw, rtSubErrRgn, CV_RGB(0, 0, 0), 4); //
                     cnt_Small++;
                 }
                 else
                 {
-                    vRegions.push_back(rt);
+                    vRegions->push_back(vRois[k]);
                     cnt_Small_Err++;
                     Rect rtSubErrRgn = rt;
                     rtSubErrRgn.x += vRois_Small[i].x - inflate;

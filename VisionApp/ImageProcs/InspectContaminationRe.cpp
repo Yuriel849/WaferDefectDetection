@@ -7,7 +7,7 @@ InspectContaminationRe::~InspectContaminationRe() {}
 
 int InspectContaminationRe::GetObjectRegionsTemplatMatching(const Mat& src, const Mat& ptrn, std::vector<cv::Rect>& vRegions) { return 0; }
 
-int InspectContaminationRe::OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>& vRegions)
+int InspectContaminationRe::OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>* vRegions)
 {
 	cv::Mat src_gray_search = src;
 	cv::Mat src_draw = drawColor;
