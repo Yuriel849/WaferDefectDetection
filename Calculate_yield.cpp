@@ -14,57 +14,7 @@ std::string Location_Green = "../KCCImageNet/WaferProj/Location_green.bmp";
 std::string Donut_Navy = "../KCCImageNet/WaferProj/Donut_navy.bmp";
 std::string Edge_Location_Navy = "../KCCImageNet/WaferProj/Edge_location_navy.bmp";
 
-std::string TEST = "../KCCImageNet/WaferProj/Scratch_green_real.bmp";		// ÆÄÀÏ °æ·Î¸¦ »¡¸® 
-
-
-/*
-void MatchingMethod(const Mat& serch_img, const Mat& ptrn_img, const double& thres, vector<Rect>& rois)
-{
-	Mat result = Mat::zeros(Size(serch_img.cols - ptrn_img.cols + 1, serch_img.rows - ptrn_img.rows + 1), CV_32FC1);
-	int match_method = TM_CCORR_NORMED;
-	matchTemplate(serch_img, ptrn_img, result, match_method);
-	normalize(result, result, 0, 1, NORM_MINMAX, -1, Mat());
-
-	double minVal; double maxVal; Point minLoc; Point maxLoc;
-	Point matchLoc;
-
-	bool multiobjects = true;
-	if (!multiobjects)
-	{
-		minMaxLoc(result, &minVal, &maxVal, &minLoc, &maxLoc, Mat());
-		if (match_method == TM_SQDIFF || match_method == TM_SQDIFF_NORMED)
-		{
-			matchLoc = minLoc;
-		}
-		else
-		{
-			matchLoc = maxLoc;
-		}
-
-		rois.push_back(Rect(matchLoc.x, matchLoc.y, ptrn_img.cols, ptrn_img.rows));
-	}
-	else
-	{
-		Mat tm_bin;
-		double min_thr = thres;
-		double max_thr = 1.0;
-		cv::threshold(result, tm_bin, min_thr, max_thr, ThresholdTypes::THRESH_BINARY);
-		tm_bin *= 255;
-
-		tm_bin.convertTo(tm_bin, CV_8UC1);
-
-		vector<vector<Point>> contours;
-		vector<Vec4i> hierarchy;
-		findContours(tm_bin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
-
-		for (size_t i = 0; i < contours.size(); i++)
-		{
-			RotatedRect rrt = minAreaRect(contours[i]);
-			//rois.push_back(rrt.boundingRect());
-			rois.push_back(Rect(rrt.boundingRect().tl().x, rrt.boundingRect().tl().y, ptrn_img.cols, ptrn_img.rows));
-		}
-	}
-}*/
+std::string TEST = "../KCCImageNet/WaferProj/Scratch_green_real.bmp";		// íŒŒì¼ ê²½ë¡œë¥¼ ë¹¨ë¦¬ 
 
 
 void draw_line(cv::Mat& img, cv::Point pt1, cv::Point pt2, cv::Scalar color, int thickness, std::string style, int gap)
@@ -118,11 +68,11 @@ void draw_line(cv::Mat& img, cv::Point pt1, cv::Point pt2, cv::Scalar color, int
 
 void ScratchDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv::Mat& fill_img, int& scratch_num)
 {
-	// find			 ÁÂÇ¥ ¹è¿­ 
-	// search_img	 Å½»öÇÒ ÀÌ¹ÌÁö IMREAD_GRAYSCALE
-	// draw_img		 »ç°¢Çü ±×¸± ÀÌ¹ÌÁö IMREAD_ANYCOLOR
-	// fill_img	     »ö Ã¤¿ï ÀÌ¹ÌÁö IMREAD_ANYCOLOR
-	// scratch_num   ScratchÀÇ ÃÊ±â °³¼ö. Ã³À½¿¡´Â ´ç¿¬È÷ 0
+	// find			 ì¢Œí‘œ ë°°ì—´ 
+	// search_img	 íƒìƒ‰í•  ì´ë¯¸ì§€ IMREAD_GRAYSCALE
+	// draw_img		 ì‚¬ê°í˜• ê·¸ë¦´ ì´ë¯¸ì§€ IMREAD_ANYCOLOR
+	// fill_img	     ìƒ‰ ì±„ìš¸ ì´ë¯¸ì§€ IMREAD_ANYCOLOR
+	// scratch_num   Scratchì˜ ì´ˆê¸° ê°œìˆ˜. ì²˜ìŒì—ëŠ” ë‹¹ì—°íˆ 0
 
 	RNG rng(12345);
 	vector<vector<Point>> contours_scratch;
@@ -155,7 +105,7 @@ void ScratchDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, c
 
 		else
 		{
-			for (size_t k = 0; k < contours_scratch.size(); k++) // contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+			for (size_t k = 0; k < contours_scratch.size(); k++) // contourss.size();ì˜ í¬ê¸°ë§Œí¼ forë¬¸ì„ ëŒë¦°ë‹¤.(ìƒˆë¡­ê²Œ ì •ì˜ëœ ê°ì²´ ì‚¬ì´ì¦ˆ(ìˆ˜) 
 			{
 				double area = contourArea(contours_scratch[k]);
 
@@ -195,11 +145,11 @@ void ScratchDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, c
 
 void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv::Mat& fill_img, int& crack_num)
 {
-	// find			 ÁÂÇ¥ ¹è¿­ 
-	// search_img	 Å½»öÇÒ ÀÌ¹ÌÁö IMREAD_GRAYSCALE
-	// draw_img		 »ç°¢Çü ±×¸± ÀÌ¹ÌÁö IMREAD_ANYCOLOR
-	// fill_img	     »ö Ã¤¿ï ÀÌ¹ÌÁö IMREAD_ANYCOLOR
-	// crack_num     crackÀÇ ÃÊ±â °³¼ö. Ã³À½¿¡´Â ´ç¿¬È÷ 0
+	// find			 ì¢Œí‘œ ë°°ì—´ 
+	// search_img	 íƒìƒ‰í•  ì´ë¯¸ì§€ IMREAD_GRAYSCALE
+	// draw_img		 ì‚¬ê°í˜• ê·¸ë¦´ ì´ë¯¸ì§€ IMREAD_ANYCOLOR
+	// fill_img	     ìƒ‰ ì±„ìš¸ ì´ë¯¸ì§€ IMREAD_ANYCOLOR
+	// crack_num     crackì˜ ì´ˆê¸° ê°œìˆ˜. ì²˜ìŒì—ëŠ” ë‹¹ì—°íˆ 0
 
 	RNG rng(12345);
 	vector<vector<Point>> contours_crack;
@@ -221,14 +171,14 @@ void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv:
 		double thres_crack = search_img.at<uchar>(ptThreshold.y, ptThreshold.x) + 9;
 		cv::threshold(subImgCrack, binCrack, thres_crack, 255, ThresholdTypes::THRESH_BINARY_INV);
 
-		// morpology ³ëÀÌÁî Á¦°Å ºÎºĞ
-		int kernelSz = 2;		// ³ëÀÌÁî Å©±â
+		// morpology ë…¸ì´ì¦ˆ ì œê±° ë¶€ë¶„
+		int kernelSz = 2;		// ë…¸ì´ì¦ˆ í¬ê¸°
 		int shape = MorphShapes::MORPH_RECT;
-		cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); // Á¤lSz + 1) 
+		cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); // ì •lSz + 1) 
 		Mat SE = cv::getStructuringElement(shape, sz);
-		Mat src_open;		 // ³ëÀÌÁî°¡ Á¦°ÅµÈ »óÅÂ.
-		int type = MorphTypes::MORPH_OPEN;		// ³ëÀÌÁî¸¦ Á¦°ÅÇÏ´Â ±â´É MORPH_OPENÀ» type¿¡ ´ã°Ú´Ù.
-		cv::morphologyEx(binCrack, src_open, type, SE);   // cv::morphologyEx(src_bin(ÀÔ·Â), src_open(Ãâ·Â), type, SE);  //morphologyEx ³ëÀÌÁî¸¦ Á¦°ÅÇÏ°Ú´Ù. 
+		Mat src_open;		 // ë…¸ì´ì¦ˆê°€ ì œê±°ëœ ìƒíƒœ.
+		int type = MorphTypes::MORPH_OPEN;		// ë…¸ì´ì¦ˆë¥¼ ì œê±°í•˜ëŠ” ê¸°ëŠ¥ MORPH_OPENì„ typeì— ë‹´ê² ë‹¤.
+		cv::morphologyEx(binCrack, src_open, type, SE);   // cv::morphologyEx(src_bin(ì…ë ¥), src_open(ì¶œë ¥), type, SE);  //morphologyEx ë…¸ì´ì¦ˆë¥¼ ì œê±°í•˜ê² ë‹¤. 
 
 		cv::findContours(src_open, contours_crack, hierarchy_crack, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
@@ -242,7 +192,7 @@ void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv:
 
 		else
 		{
-			for (size_t k = 0; k < contours_crack.size(); k++)		// contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+			for (size_t k = 0; k < contours_crack.size(); k++)		// contourss.size();ì˜ í¬ê¸°ë§Œí¼ forë¬¸ì„ ëŒë¦°ë‹¤.(ìƒˆë¡­ê²Œ ì •ì˜ëœ ê°ì²´ ì‚¬ì´ì¦ˆ(ìˆ˜) 
 			{
 				double area = contourArea(contours_crack[k]);
 
@@ -283,13 +233,13 @@ void CrackDetect(vector<Rect>& find, cv::Mat& search_img, cv::Mat& draw_img, cv:
 
 void QR_Detect(cv::Mat& draw_img, cv::Mat& fill_img)
 {
-	// draw_img		 QR °ËÃâÇÒ ÀÌ¹ÌÁö IMREAD_ANYCOLOR
-	// fill_img	     QR °ËÃâÇÒ ÀÌ¹ÌÁö IMREAD_ANYCOLOR
+	// draw_img		 QR ê²€ì¶œí•  ì´ë¯¸ì§€ IMREAD_ANYCOLOR
+	// fill_img	     QR ê²€ì¶œí•  ì´ë¯¸ì§€ IMREAD_ANYCOLOR
 
-	QRCodeDetector QRdetector;   //QRCodeDetector Å¸ÀÔÀÇ º¯¼ö detector ¼±¾ğ 
+	QRCodeDetector QRdetector;   //QRCodeDetector íƒ€ì…ì˜ ë³€ìˆ˜ detector ì„ ì–¸ 
 
-	vector<Point> QRpoints;      //QRÄÚµåÀÇ ¸ğ¼­¸® 4°³ÀÇ ÁÂÇ¥
-	String QRinfo = QRdetector.detectAndDecode(draw_img, QRpoints);		//QR¿¡ ÀúÀåµÈ ÅØ½ºÆ®¸¦ info¿¡ ÀúÀå      
+	vector<Point> QRpoints;      //QRì½”ë“œì˜ ëª¨ì„œë¦¬ 4ê°œì˜ ì¢Œí‘œ
+	String QRinfo = QRdetector.detectAndDecode(draw_img, QRpoints);		//QRì— ì €ì¥ëœ í…ìŠ¤íŠ¸ë¥¼ infoì— ì €ì¥      
 
 	if (!QRinfo.empty())
 	{
@@ -327,14 +277,14 @@ void main()
 		cv::threshold(src_gray_search, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);
 		vector<vector<Point>> contours;
 		vector<Vec4i> hierarchy;
-		cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);		// °´Ã¼ ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ °´Ã¼ ¿Ü°û¼± °ËÃâ
+		cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);		// ê°ì²´ ë²”ìœ„ê°’ì„ êµ¬í•˜ê¸° ìœ„í•´ ê°ì²´ ì™¸ê³½ì„  ê²€ì¶œ
 
-		for (size_t k = 0; k < contours.size(); k++)		// contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+		for (size_t k = 0; k < contours.size(); k++)		// contourss.size();ì˜ í¬ê¸°ë§Œí¼ forë¬¸ì„ ëŒë¦°ë‹¤.(ìƒˆë¡­ê²Œ ì •ì˜ëœ ê°ì²´ ì‚¬ì´ì¦ˆ(ìˆ˜) 
 		{
 			double area = contourArea(contours[k]);
 
-			RotatedRect rrt = minAreaRect(contours[k]);		// °´Ã¼ ¿Ü°û¼±À» ³ÑÁö ¾ÊÀ» ¸¸Å­ ÀÇ »çÀÌÁî¸¦ wRrt¿¡ ´ã¾ÆÁÜ
-			Rect rt = rrt.boundingRect();		// °´Ã¼ÀÇ À§Ä¡¿¡ »ó°ü¾øÀÌ Á¤¹æÇâ »ç°¢Çü »ı¼º
+			RotatedRect rrt = minAreaRect(contours[k]);		// ê°ì²´ ì™¸ê³½ì„ ì„ ë„˜ì§€ ì•Šì„ ë§Œí¼ ì˜ ì‚¬ì´ì¦ˆë¥¼ wRrtì— ë‹´ì•„ì¤Œ
+			Rect rt = rrt.boundingRect();		// ê°ì²´ì˜ ìœ„ì¹˜ì— ìƒê´€ì—†ì´ ì •ë°©í–¥ ì‚¬ê°í˜• ìƒì„±
 
 			double area_min = 180 * 180 - 180 * 180 * 0.1;
 			double area_max = 180 * 180 + 180 * 180 * 0.1;
@@ -342,7 +292,7 @@ void main()
 			{
 
 				vRois.push_back(rt);
-				cv::rectangle(src_draw, rrt.boundingRect(), CV_RGB(0, 0, 255), 1);		// src_openn¿¡¼­ Ã£¾Æ³½ °´Ã¼ÀÇ ¿Ü°û¼± ºÎºĞÀÇ wR2f.tl() ÁÂ»ó ²ÀÁöÁ¡°ú
+				cv::rectangle(src_draw, rrt.boundingRect(), CV_RGB(0, 0, 255), 1);		// src_opennì—ì„œ ì°¾ì•„ë‚¸ ê°ì²´ì˜ ì™¸ê³½ì„  ë¶€ë¶„ì˜ wR2f.tl() ì¢Œìƒ ê¼­ì§€ì ê³¼
 			}
 		}
 
