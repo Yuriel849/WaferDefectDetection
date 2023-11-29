@@ -54,6 +54,9 @@
     <ClCompile Include="Woosun_inspection_2nd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Woosun_inspection_3rd.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
