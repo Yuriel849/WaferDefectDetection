@@ -137,6 +137,7 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
                 }
                 else
                 {
+                    vRegions.push_back(rt);
                     cnt_Large_Err++;
                     Rect rtSubErrRgn = rt; //조건에  충족하지 않은 rt값 rtSubErrRgn에 저장
                     rtSubErrRgn.x += vRois_Large[i].x - inflate; // x점 위치에 -7만큼 위치 조정
@@ -200,6 +201,7 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
                 }
                 else
                 {
+                    vRegions.push_back(rt);
                     cnt_Small_Err++;
                     Rect rtSubErrRgn = rt;
                     rtSubErrRgn.x += vRois_Small[i].x - inflate;
@@ -224,12 +226,10 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
     //display result :: error rectangle
     for (size_t i = 0; i < vRois_Large_Err.size(); i++)
     {
-        vRegions.push_back(vRois_Large_Err[i]);
         cv::rectangle(drawColor, vRois_Large_Err[i], CV_RGB(255, 0, 255), 2); //
     }
     for (size_t i = 0; i < vRois_Small_Err.size(); i++)
     {
-        vRegions.push_back(vRois_Small_Err[i]);
         cv::rectangle(drawColor, vRois_Small_Err[i], CV_RGB(255, 0, 255), 2); //
     }
     int b = 0;

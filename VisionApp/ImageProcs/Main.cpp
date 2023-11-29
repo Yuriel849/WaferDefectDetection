@@ -34,6 +34,12 @@ void main()
 	vInsps.push_back(&insp_cont);
 
 	std::vector<std::vector<cv::Rect>> vVRegions;
+	std::vector<cv::Rect> Scratch_Regions;
+	std::vector<cv::Rect> Crack_Regions;
+	std::vector<cv::Rect> Cont_Regions;
+	vVRegions.push_back(Scratch_Regions);
+	vVRegions.push_back(Crack_Regions);
+	vVRegions.push_back(Cont_Regions);
 
 	for (size_t i = 0; i < vInsps.size(); i++)
 	{
