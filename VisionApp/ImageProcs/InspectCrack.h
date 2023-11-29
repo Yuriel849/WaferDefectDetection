@@ -7,7 +7,7 @@ public:
 	InspectCrack();
 	~InspectCrack();
 
-	int OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect> vRegions) override;
+	int OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>& vRegions) override;
 private:
 
 };
