@@ -11,9 +11,9 @@ std::string EDGE_LOCATION = "./res/img/edge_location_black.png";
 std::string LOCATION = "./res/img/location_black.png";
 std::string SCRATCH = "./res/img/scratch_black.png";
 std::string SCRATCH_GREEN = "./res/img/Scratch_green.bmp";
-std::string LOCATION_GREEN = "./res/img/Location_green.png";
-std::string EDGE_LOCATION_NAVY = "./res/img/Edge_location_navy.png";
-std::string DONUT_NAVY = "./res/img/Donut_navy.png";
+std::string LOCATION_GREEN = "./res/img/Location_green.bmp";
+std::string EDGE_LOCATION_NAVY = "./res/img/Edge_location_navy.bmp";
+std::string DONUT_NAVY = "./res/img/Donut_navy.bmp";
 
 void main()
 {
@@ -21,8 +21,8 @@ void main()
 	InspectCrack insp_crack;
 	InspectContamination insp_cont;
 
-	cv::Mat src = cv::imread(DONUT_NAVY, cv::ImreadModes::IMREAD_GRAYSCALE);
-	cv::Mat drawing = cv::imread(DONUT_NAVY, cv::ImreadModes::IMREAD_ANYCOLOR);
+	cv::Mat src = cv::imread(SCRATCH_GREEN, cv::ImreadModes::IMREAD_GRAYSCALE);
+	cv::Mat drawing = cv::imread(SCRATCH_GREEN, cv::ImreadModes::IMREAD_ANYCOLOR);
 
 	//InspectScratch* pins = &insp_scratch;
 	//InspGeneric* pins = &insp_scratch;
@@ -33,12 +33,12 @@ void main()
 	vInsps.push_back(&insp_crack);
 	vInsps.push_back(&insp_cont);
 
-	std::vector<cv::Rect> vRegions;
-
+	std::vector<std::vector<cv::Rect>> vVRegions;
 
 	for (size_t i = 0; i < vInsps.size(); i++)
 	{
 		InspGeneric* pins = vInsps[i];
+		std::vector<cv::Rect> vRegions = vVRegions[i];
 
 		pins->OnTestProcess(src, drawing, vRegions);
 

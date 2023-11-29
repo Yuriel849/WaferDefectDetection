@@ -130,8 +130,8 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
                 Rect rt = rrt.boundingRect(); // 객체의 위치에 상관없이 정방향 사각형 생성하여 rt에 담아줌
                 
                 //large 사이즈 일정 조건 길이 추출  //rt 검출된 객체 길이 18 <= rt.width && rt.width <= 22
-                if (((avg_Width_Large * 0.8) <= rt.width && rt.width <= (avg_Width_Large * 1.2))
-                    && ((avg_Height_Large * 0.8) <= rt.height && rt.height <= (avg_Height_Large * 1.2)))
+                if (((avg_Width_Large * 0.9) <= rt.width && rt.width <= (avg_Width_Large * 1.1))
+                    && ((avg_Height_Large * 0.9) <= rt.height && rt.height <= (avg_Height_Large * 1.1)))
                 {
                     cnt_Large++;
                 }
@@ -224,16 +224,15 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
     //display result :: error rectangle
     for (size_t i = 0; i < vRois_Large_Err.size(); i++)
     {
+        vRegions.push_back(vRois_Large_Err[i]);
         cv::rectangle(drawColor, vRois_Large_Err[i], CV_RGB(255, 0, 255), 2); //
     }
     for (size_t i = 0; i < vRois_Small_Err.size(); i++)
     {
+        vRegions.push_back(vRois_Small_Err[i]);
         cv::rectangle(drawColor, vRois_Small_Err[i], CV_RGB(255, 0, 255), 2); //
     }
     int b = 0;
-
-
-
 
 	return 1;
 }
