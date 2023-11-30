@@ -11,7 +11,7 @@ public:
 	int crack_num = 1;
 	string crack = "Crack";
 
-	vector<Rect> find_crack; // crack ¿À·ù°¡ µç »ç°¢Çü À§Ä¡, Å©±â¸¦ ÀúÀåÇÒ RectÇü vector
+	vector<Rect> find_crack; // crack ì˜¤ë¥˜ê°€ ë“  ì‚¬ê°í˜• ìœ„ì¹˜, í¬ê¸°ë¥¼ ì €ì¥í•  Rectí˜• vector
 
 private:
 	vector<vector<Point>> contours_crack;
