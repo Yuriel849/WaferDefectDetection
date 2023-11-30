@@ -11,7 +11,7 @@ public:
 	int scratch_num = 1;
 	string scratch = "Scratch";
 
-	vector<Rect> find_scratch; // crack ¿À·ù°¡ µç »ç°¢Çü À§Ä¡, Å©±â¸¦ ÀúÀåÇÒ RectÇü vector
+	vector<Rect> find_scratch; // crack ì˜¤ë¥˜ê°€ ë“  ì‚¬ê°í˜• ìœ„ì¹˜, í¬ê¸°ë¥¼ ì €ì¥í•  Rectí˜• vector
 
 private:
 	
