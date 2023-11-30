@@ -13,28 +13,28 @@ InspectScratch::~InspectScratch()
 int InspectScratch::OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>* vRegions)
 {
  
-    // find          MechingMethod()·Î °áÇÔ ¾ø´Â ÀÌ¹ÌÁö¸¦ ÅÛÇÃ¸´ Å½»öÇÏ¿© ¾òÀº, ¿Ã¹Ù¸¥ ÁÂÇ¥ ¹è¿­ -> vRegions
-    // search_img    Å½»öÇÒ ÀÌ¹ÌÁö IMREAD_GRAYSCALE -> src
-    // drawColor       »ç°¢Çü ±×¸± ÀÌ¹ÌÁö IMREAD_ANYCOLOR ->  X
-    // fill_img        »ö Ã¤¿ï ÀÌ¹ÌÁö IMREAD_ANYCOLOR -> drawColor
+    // find          MechingMethod()ë¡œ ê²°í•¨ ì—†ëŠ” ì´ë¯¸ì§€ë¥¼ í…œí”Œë¦¿ íƒìƒ‰í•˜ì—¬ ì–»ì€, ì˜¬ë°”ë¥¸ ì¢Œí‘œ ë°°ì—´ -> vRegions
+    // search_img    íƒìƒ‰í•  ì´ë¯¸ì§€ IMREAD_GRAYSCALE -> src
+    // drawColor       ì‚¬ê°í˜• ê·¸ë¦´ ì´ë¯¸ì§€ IMREAD_ANYCOLOR ->  X
+    // fill_img        ìƒ‰ ì±„ìš¸ ì´ë¯¸ì§€ IMREAD_ANYCOLOR -> drawColor
 
     ////Identify the large and small squares in each chip across the wafer under inspection///////////
-    vector<cv::Rect> vRois; //ÀüÃ¼ ÀÌ¹ÌÁö ¹éÅÍ ¹è¿­·Î ÀúÀå
+    vector<cv::Rect> vRois; //ì „ì²´ ì´ë¯¸ì§€ ë°±í„° ë°°ì—´ë¡œ ì €ì¥
     vector<vector<Point>> contours;
     vector<Vec4i> hierarchy;
     Mat obj_Region;
-    Point ptThrehold = Point(888, 150); //ÀÌÁøÈ­µÈ ¹è°æ »öº¸´Ù ¹àÀ» °æ¿ì Â÷ÀÌ¸¦ ÁÖ±â À§ÇØ ¹è°æ À§Ä¡ °ª Æ÷ÀÎÅÍ·Î ¼³Á¤ 
-    double min_threshold = src.data[ptThrehold.y * src.cols + ptThrehold.x] + 5; //¹è°æ»öº¸´Ù ¹àÀ» ºÎºĞ ¼³Á¤ÇÏ¿©
-    cv::threshold(src, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);// obj_Region¿¡ ÀÌÁøÈ­ ÀÛ¾÷
-    contours.clear(); //»õ·Ó°Ô ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ ¹éÅÍ Æ÷ÀÎÆ® º¯¼ö contourss »ı¼º
-    hierarchy.clear(); //¹éÅÍ hierarchyº¯¼ö »ı¼º
-    cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //°´Ã¼ ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ °´Ã¼ ¿Ü°û¼± °ËÃâ
-    for (size_t k = 0; k < contours.size(); k++) //contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+    Point ptThrehold = Point(888, 150); //ì´ì§„í™”ëœ ë°°ê²½ ìƒ‰ë³´ë‹¤ ë°ì„ ê²½ìš° ì°¨ì´ë¥¼ ì£¼ê¸° ìœ„í•´ ë°°ê²½ ìœ„ì¹˜ ê°’ í¬ì¸í„°ë¡œ ì„¤ì • 
+    double min_threshold = src.data[ptThrehold.y * src.cols + ptThrehold.x] + 5; //ë°°ê²½ìƒ‰ë³´ë‹¤ ë°ì„ ë¶€ë¶„ ì„¤ì •í•˜ì—¬
+    cv::threshold(src, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);// obj_Regionì— ì´ì§„í™” ì‘ì—…
+    contours.clear(); //ìƒˆë¡­ê²Œ ë²”ìœ„ê°’ì„ êµ¬í•˜ê¸° ìœ„í•´ ë°±í„° í¬ì¸íŠ¸ ë³€ìˆ˜ contourss ìƒì„±
+    hierarchy.clear(); //ë°±í„° hierarchyë³€ìˆ˜ ìƒì„±
+    cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //ê°ì²´ ë²”ìœ„ê°’ì„ êµ¬í•˜ê¸° ìœ„í•´ ê°ì²´ ì™¸ê³½ì„  ê²€ì¶œ
+    for (size_t k = 0; k < contours.size(); k++) //contourss.size();ì˜ í¬ê¸°ë§Œí¼ forë¬¸ì„ ëŒë¦°ë‹¤.(ìƒˆë¡­ê²Œ ì •ì˜ëœ ê°ì²´ ì‚¬ì´ì¦ˆ(ìˆ˜) 
     {
         double area = contourArea(contours[k]);
 
-        RotatedRect rrt = minAreaRect(contours[k]);//°´Ã¼ ¿Ü°û¼±À» ³ÑÁö ¾ÊÀ» ¸¸Å­ ÀÇ »çÀÌÁî¸¦ wRrt¿¡ ´ã¾ÆÁÜ
-        Rect rt = rrt.boundingRect(); // °´Ã¼ÀÇ À§Ä¡¿¡ »ó°ü¾øÀÌ Á¤¹æÇâ »ç°¢Çü »ı¼º
+        RotatedRect rrt = minAreaRect(contours[k]);//ê°ì²´ ì™¸ê³½ì„ ì„ ë„˜ì§€ ì•Šì„ ë§Œí¼ ì˜ ì‚¬ì´ì¦ˆë¥¼ wRrtì— ë‹´ì•„ì¤Œ
+        Rect rt = rrt.boundingRect(); // ê°ì²´ì˜ ìœ„ì¹˜ì— ìƒê´€ì—†ì´ ì •ë°©í–¥ ì‚¬ê°í˜• ìƒì„±
 
         if (160 <= rt.width && rt.width <= 200)
         {
@@ -68,7 +68,7 @@ int InspectScratch::OnTestProcess(const Mat& src, const Mat& drawColor, std::vec
 
         else
         {
-            for (size_t k = 0; k < contours_scratch.size(); k++) //contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+            for (size_t k = 0; k < contours_scratch.size(); k++) //contourss.size();ì˜ í¬ê¸°ë§Œí¼ forë¬¸ì„ ëŒë¦°ë‹¤.(ìƒˆë¡­ê²Œ ì •ì˜ëœ ê°ì²´ ì‚¬ì´ì¦ˆ(ìˆ˜) 
             {
                 double area = contourArea(contours_scratch[k]);
 
@@ -94,7 +94,7 @@ int InspectScratch::OnTestProcess(const Mat& src, const Mat& drawColor, std::vec
                     cv::putText(drawColor, scratch, vRois[i].tl(), FONT_HERSHEY_SIMPLEX, 0.5, color, 1.5, 8);
                     cv::rectangle(drawColor, vRois[i], color, CV_FILLED);
 
-                    vRegions->push_back(vRois[i]); //scratch ¿À·ù »ç°¢ÇüÀÇ µ¥ÀÌÅÍ¸¦ ÀúÀå. 
+                    vRegions->push_back(vRois[i]); //scratch ì˜¤ë¥˜ ì‚¬ê°í˜•ì˜ ë°ì´í„°ë¥¼ ì €ì¥. 
 
                     //cv::Point rtPts[4] = { vRegions[i].tl(), Point(vRegions[i].tl().x + vRegions[i].width, vRegions[i].tl().y),
                     //vRegions[i].br(), Point(vRegions[i].tl().x, vRegions[i].br().y) };
