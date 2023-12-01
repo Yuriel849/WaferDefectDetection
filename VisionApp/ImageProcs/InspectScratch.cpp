@@ -10,30 +10,31 @@ InspectScratch::~InspectScratch()
 {
 }
 
-int InspectScratch::OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>* vRegions)
+int InspectScratch::OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>* vRegions, int& flaw_num)
 {
-    // find          MechingMethod()ë¡?ê²°í•¨ ?†ëŠ” ?´ë?ì§€ë¥??œí”Œë¦??ìƒ‰?˜ì—¬ ?»ì?, ?¬ë°”ë¥?ì¢Œí‘œ ë°°ì—´ -> vRegions
-    // search_img    ?ìƒ‰???´ë?ì§€ IMREAD_GRAYSCALE -> src
-    // drawColor       ?¬ê°??ê·¸ë¦´ ?´ë?ì§€ IMREAD_ANYCOLOR ->  X
-    // fill_img        ??ì±„ìš¸ ?´ë?ì§€ IMREAD_ANYCOLOR -> drawColor
+
+    // find          MechingMethod()·Î °áÇÔ ¾ø´Â ÀÌ¹ÌÁö¸¦ ÅÛÇÃ¸´ Å½»öÇÏ¿© ¾òÀº, ¿Ã¹Ù¸¥ ÁÂÇ¥ ¹è¿­ -> vRegions
+    // search_img    Å½»öÇÒ ÀÌ¹ÌÁö IMREAD_GRAYSCALE -> src
+    // drawColor       »ç°¢Çü ±×¸± ÀÌ¹ÌÁö IMREAD_ANYCOLOR ->  X
+    // fill_img        »ö Ã¤¿ï ÀÌ¹ÌÁö IMREAD_ANYCOLOR -> drawColor
 
     ////Identify the large and small squares in each chip across the wafer under inspection///////////
-    vector<cv::Rect> vRois; //?„ì²´ ?´ë?ì§€ ë°±í„° ë°°ì—´ë¡??€??
+    vector<cv::Rect> vRois; //ÀüÃ¼ ÀÌ¹ÌÁö ¹éÅÍ ¹è¿­·Î ÀúÀå
     vector<vector<Point>> contours;
     vector<Vec4i> hierarchy;
     Mat obj_Region;
-    Point ptThrehold = Point(888, 150); //?´ì§„?”ëœ ë°°ê²½ ?‰ë³´??ë°ì„ ê²½ìš° ì°¨ì´ë¥?ì£¼ê¸° ?„í•´ ë°°ê²½ ?„ì¹˜ ê°??¬ì¸?°ë¡œ ?¤ì • 
-    double min_threshold = src.data[ptThrehold.y * src.cols + ptThrehold.x] + 5; //ë°°ê²½?‰ë³´??ë°ì„ ë¶€ë¶??¤ì •?˜ì—¬
-    cv::threshold(src, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);// obj_Region???´ì§„???‘ì—…
-    contours.clear(); //?ˆë¡­ê²?ë²”ìœ„ê°’ì„ êµ¬í•˜ê¸??„í•´ ë°±í„° ?¬ì¸??ë³€??contourss ?ì„±
-    hierarchy.clear(); //ë°±í„° hierarchyë³€???ì„±
-    cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //ê°ì²´ ë²”ìœ„ê°’ì„ êµ¬í•˜ê¸??„í•´ ê°ì²´ ?¸ê³½??ê²€ì¶?
-    for (size_t k = 0; k < contours.size(); k++) //contourss.size();???¬ê¸°ë§Œí¼ forë¬¸ì„ ?Œë¦°??(?ˆë¡­ê²??•ì˜??ê°ì²´ ?¬ì´ì¦??? 
+    Point ptThrehold = Point(888, 150); //ÀÌÁøÈ­µÈ ¹è°æ »öº¸´Ù ¹àÀ» °æ¿ì Â÷ÀÌ¸¦ ÁÖ±â À§ÇØ ¹è°æ À§Ä¡ °ª Æ÷ÀÎÅÍ·Î ¼³Á¤ 
+    double min_threshold = src.data[ptThrehold.y * src.cols + ptThrehold.x] + 5; //¹è°æ»öº¸´Ù ¹àÀ» ºÎºĞ ¼³Á¤ÇÏ¿©
+    cv::threshold(src, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);// obj_Region¿¡ ÀÌÁøÈ­ ÀÛ¾÷
+    contours.clear(); //»õ·Ó°Ô ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ ¹éÅÍ Æ÷ÀÎÆ® º¯¼ö contourss »ı¼º
+    hierarchy.clear(); //¹éÅÍ hierarchyº¯¼ö »ı¼º
+    cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //°´Ã¼ ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ °´Ã¼ ¿Ü°û¼± °ËÃâ
+    for (size_t k = 0; k < contours.size(); k++) //contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
     {
         double area = contourArea(contours[k]);
 
-        RotatedRect rrt = minAreaRect(contours[k]);//ê°ì²´ ?¸ê³½? ì„ ?˜ì? ?Šì„ ë§Œí¼ ???¬ì´ì¦ˆë? wRrt???´ì•„ì¤?
-        Rect rt = rrt.boundingRect(); // ê°ì²´???„ì¹˜???ê??†ì´ ?•ë°©???¬ê°???ì„±
+        RotatedRect rrt = minAreaRect(contours[k]);//°´Ã¼ ¿Ü°û¼±À» ³ÑÁö ¾ÊÀ» ¸¸Å­ ÀÇ »çÀÌÁî¸¦ wRrt¿¡ ´ã¾ÆÁÜ
+        Rect rt = rrt.boundingRect(); // °´Ã¼ÀÇ À§Ä¡¿¡ »ó°ü¾øÀÌ Á¤¹æÇâ »ç°¢Çü »ı¼º
 
         if (160 <= rt.width && rt.width <= 200)
         {
@@ -58,7 +59,7 @@ int InspectScratch::OnTestProcess(const Mat& src, const Mat& drawColor, std::vec
         cv::findContours(binScratch, contours_scratch, hierarchy_scratch, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
         string msg;
-        msg = to_string(scratch_num);
+        msg = to_string(scratch_num + 1);
 
         if (contours_scratch.empty())
         {
@@ -67,7 +68,7 @@ int InspectScratch::OnTestProcess(const Mat& src, const Mat& drawColor, std::vec
 
         else
         {
-            for (size_t k = 0; k < contours_scratch.size(); k++) //contourss.size();???¬ê¸°ë§Œí¼ forë¬¸ì„ ?Œë¦°??(?ˆë¡­ê²??•ì˜??ê°ì²´ ?¬ì´ì¦??? 
+            for (size_t k = 0; k < contours_scratch.size(); k++) //contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
             {
                 double area = contourArea(contours_scratch[k]);
 
@@ -86,14 +87,14 @@ int InspectScratch::OnTestProcess(const Mat& src, const Mat& drawColor, std::vec
                     contours_scratch_error_all.push_back(contours_scratch_error);
                     drawContours(drawColor, contours_scratch_error_all, 0, color_scratch, 3);
 
-
                     color = color_scratch;
                     scratch_num += 1;
-                    cv::putText(drawColor, msg, vRois[i].br(), FONT_HERSHEY_SIMPLEX, 0.5, CV_RGB(255, 255, 0), 1.5, 8);      //0, 255, 255
+                    cv::putText(drawColor, msg, vRois[i].br(), FONT_HERSHEY_SIMPLEX, 1, color, 2, 8);      //0, 255, 255
                     cv::putText(drawColor, scratch, vRois[i].tl(), FONT_HERSHEY_SIMPLEX, 0.5, color, 1.5, 8);
                     cv::rectangle(drawColor, vRois[i], color, CV_FILLED);
 
-                    vRegions->push_back(vRois[i]); //scratch ?¤ë¥˜ ?¬ê°?•ì˜ ?°ì´?°ë? ?€?? 
+                    vRegions->push_back(vRois[i]); //scratch ¿À·ù »ç°¢ÇüÀÇ µ¥ÀÌÅÍ¸¦ ÀúÀå. 
+                    flaw_num += 1;      // °áÇÔ °³¼ö Áõ°¡ 
 
                     //cv::Point rtPts[4] = { vRegions[i].tl(), Point(vRegions[i].tl().x + vRegions[i].width, vRegions[i].tl().y),
                     //vRegions[i].br(), Point(vRegions[i].tl().x, vRegions[i].br().y) };
@@ -103,9 +104,9 @@ int InspectScratch::OnTestProcess(const Mat& src, const Mat& drawColor, std::vec
                     //}
                 }
             }
-
         }
     }
+
     return 0;
 }
 

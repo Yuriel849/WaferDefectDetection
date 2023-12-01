@@ -148,10 +148,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="InspectContamination.cpp" />
-    <ClCompile Include="InspectContaminationRe.cpp" />
     <ClCompile Include="InspectCrack.cpp" />
     <ClCompile Include="Inspection.cpp" />
+    <ClCompile Include="InspectQR.cpp" />
     <ClCompile Include="InspectScratch.cpp" />
+    <ClCompile Include="InspectYield.cpp" />
     <ClCompile Include="InspGeneric.cpp" />
     <ClCompile Include="Main.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -177,10 +178,11 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="InspectContamination.h" />
-    <ClInclude Include="InspectContaminationRe.h" />
     <ClInclude Include="InspectCrack.h" />
     <ClInclude Include="Inspection.h" />
+    <ClInclude Include="InspectQR.h" />
     <ClInclude Include="InspectScratch.h" />
+    <ClInclude Include="InspectYield.h" />
     <ClInclude Include="InspGeneric.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

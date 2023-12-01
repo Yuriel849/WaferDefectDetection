@@ -10,30 +10,29 @@ InspectCrack::~InspectCrack()
 {
 }
 
-int InspectCrack::OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>* vRegions)
+int InspectCrack::OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>* vRegions, int& flaw_num)
 {
-	// find			 MechingMethod()ë¡?ê²°í•¨ ?†ëŠ” ?´ë?ì§€ë¥??œí”Œë¦??ìƒ‰?˜ì—¬ ?»ì?, ?¬ë°”ë¥?ì¢Œí‘œ ë°°ì—´ 
-	// search_img	 ?ìƒ‰???´ë?ì§€ IMREAD_GRAYSCALE
-	// draw_img		 ?¬ê°??ê·¸ë¦´ ?´ë?ì§€ IMREAD_ANYCOLOR
-	// fill_img	     ??ì±„ìš¸ ?´ë?ì§€   IMREAD_ANYCOLOR
+	// src			 Å½»öÇÒ ÀÌ¹ÌÁö IMREAD_GRAYSCALE
+	// drawColor	 »ç°¢Çü Ã¤¿ï ÀÌ¹ÌÁö
+	// vRegions      »ö Ã¤¿ï ÀÌ¹ÌÁö IMREAD_ANYCOLOR
 
-	  ////Identify the large and small squares in each chip across the wafer under inspection///////////
-	vector<cv::Rect> vRois; //?„ì²´ ?´ë?ì§€ ë°±í„° ë°°ì—´ë¡??€??
+	////Identify the large and small squares in each chip across the wafer under inspection///////////
+	vector<cv::Rect> vRois; //ÀüÃ¼ ÀÌ¹ÌÁö ¹éÅÍ ¹è¿­·Î ÀúÀå
 	vector<vector<Point>> contours;
 	vector<Vec4i> hierarchy;
 	Mat obj_Region;
-	Point ptThrehold = Point(888, 150); //?´ì§„?”ëœ ë°°ê²½ ?‰ë³´??ë°ì„ ê²½ìš° ì°¨ì´ë¥?ì£¼ê¸° ?„í•´ ë°°ê²½ ?„ì¹˜ ê°??¬ì¸?°ë¡œ ?¤ì • 
-	double min_threshold = src.data[ptThrehold.y * src.cols + ptThrehold.x] + 5; //ë°°ê²½?‰ë³´??ë°ì„ ë¶€ë¶??¤ì •?˜ì—¬
-	cv::threshold(src, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);// obj_Region???´ì§„???‘ì—…
-	contours.clear(); //?ˆë¡­ê²?ë²”ìœ„ê°’ì„ êµ¬í•˜ê¸??„í•´ ë°±í„° ?¬ì¸??ë³€??contourss ?ì„±
-	hierarchy.clear(); //ë°±í„° hierarchyë³€???ì„±
-	cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //ê°ì²´ ë²”ìœ„ê°’ì„ êµ¬í•˜ê¸??„í•´ ê°ì²´ ?¸ê³½??ê²€ì¶?
-	for (size_t k = 0; k < contours.size(); k++) //contourss.size();???¬ê¸°ë§Œí¼ forë¬¸ì„ ?Œë¦°??(?ˆë¡­ê²??•ì˜??ê°ì²´ ?¬ì´ì¦??? 
+	Point ptThrehold = Point(888, 150); //ÀÌÁøÈ­µÈ ¹è°æ »öº¸´Ù ¹àÀ» °æ¿ì Â÷ÀÌ¸¦ ÁÖ±â À§ÇØ ¹è°æ À§Ä¡ °ª Æ÷ÀÎÅÍ·Î ¼³Á¤ 
+	double min_threshold = src.data[ptThrehold.y * src.cols + ptThrehold.x] + 5; //¹è°æ»öº¸´Ù ¹àÀ» ºÎºĞ ¼³Á¤ÇÏ¿©
+	cv::threshold(src, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);// obj_Region¿¡ ÀÌÁøÈ­ ÀÛ¾÷
+	contours.clear(); //»õ·Ó°Ô ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ ¹éÅÍ Æ÷ÀÎÆ® º¯¼ö contourss »ı¼º
+	hierarchy.clear(); //¹éÅÍ hierarchyº¯¼ö »ı¼º
+	cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //°´Ã¼ ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ °´Ã¼ ¿Ü°û¼± °ËÃâ
+	for (size_t k = 0; k < contours.size(); k++) //contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
 	{
 		double area = contourArea(contours[k]);
 
-		RotatedRect rrt = minAreaRect(contours[k]);//ê°ì²´ ?¸ê³½? ì„ ?˜ì? ?Šì„ ë§Œí¼ ???¬ì´ì¦ˆë? wRrt???´ì•„ì¤?
-		Rect rt = rrt.boundingRect(); // ê°ì²´???„ì¹˜???ê??†ì´ ?•ë°©???¬ê°???ì„±
+		RotatedRect rrt = minAreaRect(contours[k]);//°´Ã¼ ¿Ü°û¼±À» ³ÑÁö ¾ÊÀ» ¸¸Å­ ÀÇ »çÀÌÁî¸¦ wRrt¿¡ ´ã¾ÆÁÜ
+		Rect rt = rrt.boundingRect(); // °´Ã¼ÀÇ À§Ä¡¿¡ »ó°ü¾øÀÌ Á¤¹æÇâ »ç°¢Çü »ı¼º
 
 		if (160 <= rt.width && rt.width <= 200)
 		{
@@ -55,21 +54,21 @@ int InspectCrack::OnTestProcess(const Mat& src, const Mat& drawColor, std::vecto
 		cv::Point ptThreshold(885, 150);
 		cv::drawMarker(drawColor, ptThreshold, CV_RGB(255, 255, 255), MarkerTypes::MARKER_CROSS);
 		double thres_crack = src.at<uchar>(ptThreshold.y, ptThreshold.x) + 9;					//////////////////// 61
-		cv::threshold(subImgCrack, binCrack, thres_crack, 255, ThresholdTypes::THRESH_BINARY_INV);	//INV -> 43ë³´ë‹¤ ?´ë‘??ê±?+ 61 
+		cv::threshold(subImgCrack, binCrack, thres_crack, 255, ThresholdTypes::THRESH_BINARY_INV);	//INV -> 43º¸´Ù ¾îµÎ¿î °Å + 61 
 
-		//morpology ?¸ì´ì¦??œê±° ë¶€ë¶?
-		int kernelSz = 2; //?¸ì´ì¦??¬ê¸°
+		//morpology ³ëÀÌÁî Á¦°Å ºÎºĞ
+		int kernelSz = 2; //³ëÀÌÁî Å©±â
 		int shape = MorphShapes::MORPH_RECT; //
-		cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); //?•lSz + 1) 
+		cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); //Á¤lSz + 1) 
 		Mat SE = cv::getStructuringElement(shape, sz); // 
-		Mat src_open; //?¸ì´ì¦ˆê? ?œê±°???íƒœ.
-		int type = MorphTypes::MORPH_OPEN; // ?¸ì´ì¦ˆë? ?œê±°?˜ëŠ” ê¸°ëŠ¥ MORPH_OPEN??type???´ê² ??
-		cv::morphologyEx(binCrack, src_open, type, SE);// cv::morphologyEx(src_bin(?…ë ¥), src_open(ì¶œë ¥), type, SE);//morphologyEx ?¸ì´ì¦ˆë? ?œê±°?˜ê² ?? 
+		Mat src_open; //³ëÀÌÁî°¡ Á¦°ÅµÈ »óÅÂ.
+		int type = MorphTypes::MORPH_OPEN; // ³ëÀÌÁî¸¦ Á¦°ÅÇÏ´Â ±â´É MORPH_OPENÀ» type¿¡ ´ã°Ú´Ù.
+		cv::morphologyEx(binCrack, src_open, type, SE);// cv::morphologyEx(src_bin(ÀÔ·Â), src_open(Ãâ·Â), type, SE);//morphologyEx ³ëÀÌÁî¸¦ Á¦°ÅÇÏ°Ú´Ù. 
 
 		cv::findContours(src_open, contours_crack, hierarchy_crack, RETR_TREE, CHAIN_APPROX_SIMPLE);
 
 		string msg;
-		msg = to_string(crack_num);
+		msg = to_string(crack_num + 1);
 
 		if (contours_crack.empty())
 		{
@@ -78,7 +77,7 @@ int InspectCrack::OnTestProcess(const Mat& src, const Mat& drawColor, std::vecto
 
 		else
 		{
-			for (size_t k = 0; k < contours_crack.size(); k++) //contourss.size();???¬ê¸°ë§Œí¼ forë¬¸ì„ ?Œë¦°??(?ˆë¡­ê²??•ì˜??ê°ì²´ ?¬ì´ì¦??? 
+			for (size_t k = 0; k < contours_crack.size(); k++) //contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
 			{
 				double area = contourArea(contours_crack[k]);
 
@@ -99,12 +98,12 @@ int InspectCrack::OnTestProcess(const Mat& src, const Mat& drawColor, std::vecto
 
 					color = color_crack;
 					crack_num += 1;
-					cv::putText(drawColor, msg, vRois[i].br(), FONT_HERSHEY_SIMPLEX, 0.5, color, 1.5, 8);		//0, 255, 255
+					cv::putText(drawColor, msg, vRois[i].br(), FONT_HERSHEY_SIMPLEX, 1, color, 2, 8);		//0, 255, 255
 					cv::putText(drawColor, crack, vRois[i].tl(), FONT_HERSHEY_SIMPLEX, 0.5, color, 1.5, 8);
 					cv::rectangle(drawColor, vRois[i], color, CV_FILLED);
-					vRegions->push_back(vRois[i]); //crack ?¤ë¥˜ ?¬ê°?•ì˜ ?°ì´?°ë? ?€?? 
+					vRegions->push_back(vRois[i]); //crack ¿À·ù »ç°¢ÇüÀÇ µ¥ÀÌÅÍ¸¦ ÀúÀå. 
 
-					/*int wid = (*vRegions)[i].width; : contamination ?¤ë¥˜ë¥?ê±°ë¥´ê¸??„í•´ chip?¤ì˜ ê°€ë¡??¸ë¡œ ê¸¸ì´ ?€?¥í•¨
+					/*int wid = (*vRegions)[i].width; : contamination ¿À·ù¸¦ °Å¸£±â À§ÇØ chipµéÀÇ °¡·Î ¼¼·Î ±æÀÌ ÀúÀåÇÔ
 					int he = (*vRegions)[i].height;
 					int checking = 0;*/
 
@@ -114,14 +113,13 @@ int InspectCrack::OnTestProcess(const Mat& src, const Mat& drawColor, std::vecto
 					{
 						draw_line(drawColor, rtPts[c % 4], rtPts[(c + 1) % 4], color, 2, "", 3);
 					}*/
+					flaw_num += 1;      // °áÇÔ °³¼ö Áõ°¡ 
 				}
 			}
 		}
-
-		int stop = 0;
 	}
 
-	return 1;
+	return 0;
 }
 
 void InspectCrack::draw_line(cv::Mat& img, cv::Point pt1, cv::Point pt2, cv::Scalar color, int thickness, std::string style, int gap)

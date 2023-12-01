@@ -45,9 +45,6 @@
     <ClCompile Include="Contamination_ALT.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="InspectContaminationRe.cpp">
-      <Filter>InspectClass</Filter>
-    </ClCompile>
     <ClCompile Include="Woosun_inspection.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -66,6 +63,12 @@
     <ClCompile Include="InspectCrack.cpp">
       <Filter>InspectClass</Filter>
     </ClCompile>
+    <ClCompile Include="InspectYield.cpp">
+      <Filter>InspectClass</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectQR.cpp">
+      <Filter>InspectClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -77,9 +80,6 @@
     <ClInclude Include="InspectScratch.h">
       <Filter>InspectHeader</Filter>
     </ClInclude>
-    <ClInclude Include="InspectContaminationRe.h">
-      <Filter>InspectHeader</Filter>
-    </ClInclude>
     <ClInclude Include="InspectContamination.h">
       <Filter>InspectHeader</Filter>
     </ClInclude>
@@ -87,6 +87,12 @@
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="InspectCrack.h">
+      <Filter>InspectHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectYield.h">
+      <Filter>InspectHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectQR.h">
       <Filter>InspectHeader</Filter>
     </ClInclude>
   </ItemGroup>

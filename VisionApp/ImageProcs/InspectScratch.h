@@ -7,12 +7,13 @@ public:
 	InspectScratch();
 	~InspectScratch();
 	void draw_line(cv::Mat& img, cv::Point pt1, cv::Point pt2, cv::Scalar color, int thickness, std::string style, int gap);
-	int OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>* vRegions) override;
-	int scratch_num = 1;
+	int OnTestProcess(const Mat& src, const Mat& drawColor, std::vector<cv::Rect>* vRegions, int& flaw_num) override;
+	int scratch_num = 0;
 	string scratch = "Scratch";
 
-	vector<Rect> find_scratch; // crack ?¤ë¥˜ê°€ ???¬ê°???„ì¹˜, ?¬ê¸°ë¥??€?¥í•  Rect??vector
+	vector<Rect> find_scratch; // crack ¿À·ù°¡ µç »ç°¢Çü À§Ä¡, Å©±â¸¦ ÀúÀåÇÒ RectÇü vector
 private:
+
 	vector<vector<Point>> contours_scratch;
 	vector<Vec4i> hierarchy_scratch;
 };
