@@ -10,7 +10,7 @@ InspectColor::~InspectColor()
 {
 }
 
-void InspectColor::DetectColor(cv::Mat& draw_img)		//wafer »ö»ó °ËÃâÇÒ ÀÌ¹ÌÁö	
+void InspectColor::DetectColor(cv::Mat& draw_img)		//wafer ìƒ‰ìƒ ê²€ì¶œí•  ì´ë¯¸ì§€	
 {
 	cv::Mat gray, bin;
 	cv::cvtColor(draw_img, gray, cv::COLOR_BGR2GRAY);
@@ -54,16 +54,16 @@ void InspectColor::DetectColor(cv::Mat& draw_img)		//wafer »ö»ó °ËÃâÇÒ ÀÌ¹ÌÁö
 	draw_img.copyTo(circleImage, contourMask);
 
 	cv::Mat hsv_image;
-	cv::cvtColor(circleImage, hsv_image, cv::COLOR_BGR2HSV);	//HSV º¯È¯
+	cv::cvtColor(circleImage, hsv_image, cv::COLOR_BGR2HSV);	//HSV ë³€í™˜
 
 	std::vector<cv::Mat> channels;
 	cv::split(hsv_image, channels);
-	cv::Mat hue_channel = channels[0];	// Hue Ã¤³Î °¡Á®¿À±â
+	cv::Mat hue_channel = channels[0];	// Hue ì±„ë„ ê°€ì ¸ì˜¤ê¸°
 
-	double mean_H = cv::mean(hue_channel)[0];	//Æò±Õ Hue(»öÁ¶)
+	double mean_H = cv::mean(hue_channel)[0];	//í‰ê·  Hue(ìƒ‰ì¡°)
 	std::cout << "Mean Hue : " << mean_H << std::endl;
 	cv::putText(hsv_image, "Mean H : " + std::to_string(mean_H), cv::Point(50, 80), cv::FONT_HERSHEY_SIMPLEX, 2, CV_RGB(0, 255, 255), 3);
-	cv::putText(draw_img, "Mean H : " + std::to_string(mean_H), cv::Point(50, 80), cv::FONT_HERSHEY_SIMPLEX, 2, CV_RGB(0, 0, 0), 3);		//display color 
+	cv::putText(draw_img, "Color value : " + std::to_string(mean_H), cv::Point(50, 80), cv::FONT_HERSHEY_SIMPLEX, 2, CV_RGB(0, 0, 0), 3);		//display color 
 
 	// Display wafer detection
 	drawContours(hsv_image, contours, static_cast<int>(maxContourIndex), CV_RGB(255, 0, 255), 3, LINE_8, hierarchy, 2);
