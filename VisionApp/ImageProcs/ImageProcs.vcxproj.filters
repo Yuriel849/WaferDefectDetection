@@ -69,6 +69,9 @@
     <ClCompile Include="InspectQR.cpp">
       <Filter>InspectClass</Filter>
     </ClCompile>
+    <ClCompile Include="InspectColor.cpp">
+      <Filter>InspectClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h">
@@ -93,6 +96,9 @@
       <Filter>InspectHeader</Filter>
     </ClInclude>
     <ClInclude Include="InspectQR.h">
+      <Filter>InspectHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectColor.h">
       <Filter>InspectHeader</Filter>
     </ClInclude>
   </ItemGroup>

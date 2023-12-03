@@ -6,6 +6,7 @@
 #include "InspectContamination.h"
 #include "InspectQR.h"
 #include "InspectYield.h"
+#include "InspectColor.h"
 
 std::string FLAWLESS = "./res/img/final_real_wafer.png";
 std::string DONUT = "./res/img/donut_black.png";
@@ -25,6 +26,7 @@ void main()
 	InspectContamination insp_cont;
 	InspectQR insp_QR;
 	InspectYield insp_Y;
+	InspectColor insp_C;
 
 	int flaw_num = 0;
 
@@ -47,6 +49,8 @@ void main()
 	vVRegions.push_back(&Scratch_Regions);
 	vVRegions.push_back(&Crack_Regions);
 	vVRegions.push_back(&Cont_Regions);
+
+	insp_C.DetectColor(drawing);
 
 	insp_QR.QRDetect(drawing);
 
