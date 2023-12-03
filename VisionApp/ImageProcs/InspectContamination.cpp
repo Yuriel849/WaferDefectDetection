@@ -28,19 +28,17 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
         //위 정사각형 생성 이후 특정 길이 추출
         if (13 <= rt.width && rt.width <= 17)//객체 각 small 사이즈 rt길이 13이상 17이하인 경우
         {
-
             vRois_Small.push_back(rt); //각 세부Small 객체 출력
             cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 255, 0), 1); //rrt.boundingRect()위에서 구한 사각형 값에 사각형을 그려줌
         }
         if (18 <= rt.width && rt.width <= 22)//객체 각 small 사이즈 rt길이 18이상 22이하인 경우
         {
-
             vRois_Large.push_back(rt); //각 Large세부 객체 출력
             cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 0, 255), 1); //rrt.boundingRect()위에서 구한 사각형 값에 사각형을 그려줌
         }
 
     }
-    int checking0 = 0;
+
     // Calculate average widths and heights of the large and small squares in each chip
     int sum_Width_Large = 0, sum_Height_Large = 0, sum_Width_Small = 0, sum_Height_Small = 0;
     for (size_t k = 0; k < vRois_Small.size(); k++)
@@ -79,7 +77,6 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
             vRois.push_back(rt);
             cv::rectangle(drawColor, rrt.boundingRect(), CV_RGB(0, 255, 255), 2); //
         }
-        int checking1 = 0;
     }
 
     //sub chips
@@ -90,8 +87,6 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
         Mat sub_img = src(vRois[k]).clone(); // vRois[k]번째 객체 sub_img에 삽입 
         Mat sub_img_draw;
         cvtColor(sub_img, sub_img_draw, COLOR_GRAY2BGR);
-
-        int cnt_Large = 0, cnt_Small = 0, cnt_Large_Err = 0, cnt_Small_Err = 0;
 
         //large pad
         int inflate = 7; //객체 rect 좌우 위치 오차를 줄이기 위해 7만큼 옮기기 위한 변수 설정
@@ -129,14 +124,10 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
 
                 //large 사이즈 일정 조건 길이 추출  //rt 검출된 객체 길이 18 <= rt.width && rt.width <= 22
                 if (((avg_Width_Large * 0.9) <= rt.width && rt.width <= (avg_Width_Large * 1.1))
-                    && ((avg_Height_Large * 0.9) <= rt.height && rt.height <= (avg_Height_Large * 1.1)))
-                {
-                    cnt_Large++;
-                }
+                    && ((avg_Height_Large * 0.9) <= rt.height && rt.height <= (avg_Height_Large * 1.1))) {}
                 else
                 {
                     vRegions->push_back(vRois[k]);
-                    cnt_Large_Err++;
                     Rect rtSubErrRgn = rt; //조건에  충족하지 않은 rt값 rtSubErrRgn에 저장
                     rtSubErrRgn.x += vRois_Large[i].x - inflate; // x점 위치에 -7만큼 위치 조정
                     rtSubErrRgn.y += vRois_Large[i].y; //y점 위치는 그대로
@@ -150,14 +141,8 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
                     //색칠할 칸 기억하기 
                     remember.push_back(k);
                 }
-                int checking2 = 0;
             }
-            int checking3 = 0;
         }
-        /*if (cnt_Large == 4 && cnt_Large_Err != 0)
-        {
-            vRois_Large_Err.resize(vRois_Large_Err.size() - cnt_Large_Err);
-        }*/
         //small pad   
         for (size_t i = 0; i < vRois_Small.size(); i++) //small pads 하나씩 보면서 이진화, 오류 확인
         {
@@ -193,14 +178,10 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
                 Rect rt = rrt.boundingRect(); // rt 객체의 위치에 상관없이 정방향 사각형 생성
 
                 if (((avg_Width_Small * 0.8) <= rt.width && rt.width <= (avg_Width_Small * 1.2))
-                    && ((avg_Height_Small * 0.8) <= rt.height && rt.height <= (avg_Height_Small * 1.2)))
-                {
-                    cnt_Small++;
-                }
+                    && ((avg_Height_Small * 0.8) <= rt.height && rt.height <= (avg_Height_Small * 1.2))) {}
                 else
                 {
                     vRegions->push_back(vRois[k]);
-                    cnt_Small_Err++;
                     Rect rtSubErrRgn = rt;
                     rtSubErrRgn.x += vRois_Small[i].x - inflate;
                     rtSubErrRgn.y += vRois_Small[i].y;
@@ -215,22 +196,14 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
                     //색칠할 칸 기억하기 
                     remember.push_back(k);
                 }
-                int checking4 = 0;
             }
-            int checking5 = 0;
         }
-        int checking6 = 0;
-        /*if (cnt_Small == 10 && cnt_Small_Err != 0)
-        {
-            vRois_Small_Err.resize(vRois_Small_Err.size() - cnt_Small_Err);
-        }*/
         if (remember.size() > 0)
         {
             //색칠할 칸 기억하기 
             remeber_con.push_back(vRois[k]);
             remember.clear();
         }
-
     }
 
     //display result :: error rectangle
@@ -255,13 +228,5 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
             flaw_num += 1;      // 결함 개수 증가 
         }
     }
-    //for (size_t i = 0; i < vRois_Large_Err.size(); i++)
-    //{
-    //    cv::rectangle(drawColor, vRois_Large_Err[i], CV_RGB(255, 0, 255), 2); //
-    //}
-    //for (size_t i = 0; i < vRois_Small_Err.size(); i++)
-    //{
-    //    cv::rectangle(drawColor, vRois_Small_Err[i], CV_RGB(255, 0, 255), 2); //
-    //}
     return 0;
 }
