@@ -23,24 +23,23 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
     vector<cv::Rect> vRois_Small, vRois_Large;
     for (size_t k = 0; k < contours.size(); k++)
     {
-        RotatedRect rrt = minAreaRect(contours[k]);//객체 외곽선을 넘지 않을 만큼 의 사이즈를 wRrt에 담아줌
-        Rect rt = rrt.boundingRect(); // 객체의 위치에 상관없이 정방향 사각형 생성
-        //위 정사각형 생성 이후 특정 길이 추출
-        if (13 <= rt.width && rt.width <= 17)//객체 각 small 사이즈 rt길이 13이상 17이하인 경우
+        RotatedRect rrt = minAreaRect(contours[k]);
+        Rect rt = rrt.boundingRect();
+        
+        if (13 <= rt.width && rt.width <= 17)
         {
-
-            vRois_Small.push_back(rt); //각 세부Small 객체 출력
-            cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 255, 0), 1); //rrt.boundingRect()위에서 구한 사각형 값에 사각형을 그려줌
+            vRois_Small.push_back(rt);
+            cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 255, 0), 1);
         }
-        if (18 <= rt.width && rt.width <= 22)//객체 각 small 사이즈 rt길이 18이상 22이하인 경우
+        if (18 <= rt.width && rt.width <= 22)
         {
-
-            vRois_Large.push_back(rt); //각 Large세부 객체 출력
-            cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 0, 255), 1); //rrt.boundingRect()위에서 구한 사각형 값에 사각형을 그려줌
+            vRois_Large.push_back(rt);
+            cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 0, 255), 1);
         }
 
     }
     int checking0 = 0;
+
     // Calculate average widths and heights of the large and small squares in each chip
     int sum_Width_Large = 0, sum_Height_Large = 0, sum_Width_Small = 0, sum_Height_Small = 0;
     for (size_t k = 0; k < vRois_Small.size(); k++)
@@ -57,6 +56,8 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
     }
     avg_Width_Large = static_cast<float>(sum_Width_Large) / vRois_Large.size();
     avg_Height_Large = static_cast<float>(sum_Height_Large) / vRois_Large.size();
+
+    int a = 0;
 
     // Identify the large and small squares in each chip across the wafer under inspection
     vector<cv::Rect> vRois; //전체 이미지 백터 배열로 저장
@@ -85,7 +86,7 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
     //sub chips
     vector<cv::Rect> vRois_Small_Err, vRois_Large_Err; // 스몰 객체, 라지 객체 검출 저장을 위한 백터 설정
     vector<int> remember;
-    for (size_t k = 0; k < vRois.size(); k++) // 전체 이미지 객체vRois.size()의 개수만큼 for문을 돌린다.(새롭게 정의된 객체 사이즈(수) 
+    for (size_t k = 4; k < vRois.size(); k++) // 전체 이미지 객체vRois.size()의 개수만큼 for문을 돌린다.(새롭게 정의된 객체 사이즈(수) 
     {
         Mat sub_img = src(vRois[k]).clone(); // vRois[k]번째 객체 sub_img에 삽입 
         Mat sub_img_draw;
@@ -97,37 +98,35 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
         int inflate = 7; //객체 rect 좌우 위치 오차를 줄이기 위해 7만큼 옮기기 위한 변수 설정
         for (size_t i = 0; i < vRois_Large.size(); i++) // 세부 라지 객체 사이즈만큼 반복
         {
-            Rect rt = vRois_Large[i]; // 세부 라지객체 i번째 rt에 담음
-            rt.x -= inflate; // 세부 라지객체 i번째의 x위치에서 7만큼 빼서 좌로 이동 (스몰객체 x 좌표에 -7만큼 왼쪽으로 x축 이동)
-            rt.width += inflate * 2; // 가로사이즈 디폴트 5를 2배로 늘려 윤곽을 잡아준다.//가로 길이 7*2=14만큼 rt.width길이 설정하여 범위 설정
-            rt.height += inflate + 4;// 세로사이즈 디폴트 5를 2배로 늘려 윤곽을 잡아준다.rt.height += inflate * 2(스크래치까지 잡아줘서  + 4로 크기 조정
+            Rect rt = vRois_Large[i];
+            rt.x -= inflate;
+            rt.width += inflate * 2;
+            rt.height += inflate + 4;
             //     
-            cv::rectangle(sub_img_draw, rt, CV_RGB(255, 255, 0), 1); //sub_img_draw에 rt객체의 정보만큼 사각형 그려줌
+            cv::rectangle(sub_img_draw, rt, CV_RGB(255, 255, 0), 1);
 
-            Mat Pad = sub_img(rt).clone(); // ((세부 객체 사각형 정보를 따서 Pad에 복사))
+            Mat Pad = sub_img(rt).clone();
             Mat Pad_Bin;
-            cv::threshold(Pad, Pad_Bin, obj_PAD_threshold, 255, ThresholdTypes::THRESH_BINARY); //이진화
+            cv::threshold(Pad, Pad_Bin, obj_PAD_threshold, 255, ThresholdTypes::THRESH_BINARY);
 
-            //morpology 노이즈 제거 부분
-            int kernelSz = 2; //노이즈 크기
-            int shape = MorphShapes::MORPH_RECT; //
-            cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); //정lSz + 1) 
-            Mat SE = cv::getStructuringElement(shape, sz); // 
-            Mat Pad_Open; //노이즈가 제거된 상태.
-            int type = MorphTypes::MORPH_OPEN; // 노이즈를 제거하는 기능 MORPH_OPEN을 type에 담겠다.
-            cv::morphologyEx(Pad_Bin, Pad_Open, type, SE);// cv::morphologyEx(src_bin(입력), src_open(출력), type, SE);//morphologyEx 노이즈를 제거하겠다. 
+            int kernelSz = 2;
+            int shape = MorphShapes::MORPH_RECT;
+            cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1);
+            Mat SE = cv::getStructuringElement(shape, sz);
+            Mat Pad_Open;
+            int type = MorphTypes::MORPH_OPEN;
+            cv::morphologyEx(Pad_Bin, Pad_Open, type, SE);
 
-            contours.clear(); //clear를 써서 새롬게 초기화
-            hierarchy.clear(); //clear를 써서 새롬게 초기화
-            cv::findContours(Pad_Open, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //Pad_Bin의 각 객체 외곽선 검출
-            for (size_t p = 0; p < contours.size(); p++) //Pad_Bin의 각 객체 수만큼 for문을 돌린다. 
+            contours.clear();
+            hierarchy.clear();
+            cv::findContours(Pad_Open, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+            for (size_t p = 0; p < contours.size(); p++)
             {
-                double area = contourArea(contours[p]); //검출된 객체 전체 면적 값 area에 저장
-                if (area < 10) continue; //area가 10을 넘지 않으면 종료
-                RotatedRect rrt = minAreaRect(contours[p]);//객체 외곽선을 넘지 않을 만큼 의 사이즈를 rrt에 담아줌
-                Rect rt = rrt.boundingRect(); // 객체의 위치에 상관없이 정방향 사각형 생성하여 rt에 담아줌
+                double area = contourArea(contours[p]);
+                if (area < 10) continue;
+                RotatedRect rrt = minAreaRect(contours[p]);
+                Rect rt = rrt.boundingRect();
 
-                //large 사이즈 일정 조건 길이 추출  //rt 검출된 객체 길이 18 <= rt.width && rt.width <= 22
                 if (((avg_Width_Large * 0.9) <= rt.width && rt.width <= (avg_Width_Large * 1.1))
                     && ((avg_Height_Large * 0.9) <= rt.height && rt.height <= (avg_Height_Large * 1.1)))
                 {
@@ -137,17 +136,15 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
                 {
                     vRegions->push_back(vRois[k]);
                     cnt_Large_Err++;
-                    Rect rtSubErrRgn = rt; //조건에  충족하지 않은 rt값 rtSubErrRgn에 저장
-                    rtSubErrRgn.x += vRois_Large[i].x - inflate; // x점 위치에 -7만큼 위치 조정
-                    rtSubErrRgn.y += vRois_Large[i].y; //y점 위치는 그대로
-                    cv::rectangle(sub_img_draw, rtSubErrRgn, CV_RGB(0, 255, 255), 1); //위치값 따서 사각형 그려줌
+                    Rect rtSubErrRgn = rt;
+                    rtSubErrRgn.x += vRois_Large[i].x - inflate;
+                    rtSubErrRgn.y += vRois_Large[i].y;
+                    cv::rectangle(sub_img_draw, rtSubErrRgn, CV_RGB(0, 255, 255), 1);
 
                     Rect rtDraw = rt;
-                    rtDraw.x += vRois_Large[i].x + vRois[k].x - inflate; //rtDraw.x에 vRois[k].x전체 크기 중간 객체 추출 좌표를 더하고 세부객체 x좌표 vRois_Small[i].x를 담아 투과적으로 해당 세부객체 x좌표를 직접적으로 가리키게 됨.
-                    rtDraw.y += vRois_Large[i].y + vRois[k].y; //rtDraw.y에 vRois[k].y전체 크기 중간 객체 추출 좌표를 더하고 세부객체 y좌표 vRois_Small[i].y를 담아 투과적으로 해당 세부객체 y좌표를 직접적으로 가리키게 됨.
-                    vRois_Large_Err.push_back(rtDraw); // 직접적으로 가리킨 좌표 
-                    cv::rectangle(sub_img_draw, rrt.boundingRect(), CV_RGB(255, 0, 0), 1); //
-                    //색칠할 칸 기억하기 
+                    rtDraw.x += vRois_Large[i].x + vRois[k].x - inflate;
+                    rtDraw.y += vRois_Large[i].y + vRois[k].y;
+                    vRois_Large_Err.push_back(rtDraw);
                     remember.push_back(k);
                 }
                 int checking2 = 0;

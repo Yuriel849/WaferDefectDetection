@@ -1,0 +1,13 @@
+System Log :: Start()
+[ Left ] Original Histogram  min Value = 0.000  max Value = 200.000
+[ Center ] Add 30 Histogram  min Value = 30.000  max Value = 230.000
+[ Right ] gamma 0.4 Histogram  min Value = 0.000  max Value = 231.000
+[ Left ] Original Histogram  min Value = 18.000  max Value = 253.000
+[ Center ] Add 30 Histogram  min Value = 48.000  max Value = 255.000
+[ Right ] gamma 0.4 Histogram  min Value = 88.000  max Value = 254.000
+[ Left ] Original Histogram  min Value = 7.000  max Value = 248.000
+[ Center ] Add 30 Histogram  min Value = 37.000  max Value = 255.000
+[ Right ] gamma 0.4 Histogram  min Value = 60.000  max Value = 252.000
+[ Left ] Original Histogram  min Value = 0.000  max Value = 255.000
+[ Center ] Add 30 Histogram  min Value = 30.000  max Value = 255.000
+[ Right ] gamma 0.4 Histogram  min Value = 0.000  max Value = 255.000

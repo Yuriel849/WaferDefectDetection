@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCVAppGUI", "OpenCVAppGUI\OpenCVAppGUI.vcxproj", "{635DCA1D-E4F0-4931-8CAE-555CD35F26AB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{635DCA1D-E4F0-4931-8CAE-555CD35F26AB}.Debug|x64.ActiveCfg = Debug|x64
+		{635DCA1D-E4F0-4931-8CAE-555CD35F26AB}.Debug|x64.Build.0 = Debug|x64
+		{635DCA1D-E4F0-4931-8CAE-555CD35F26AB}.Debug|x86.ActiveCfg = Debug|Win32
+		{635DCA1D-E4F0-4931-8CAE-555CD35F26AB}.Debug|x86.Build.0 = Debug|Win32
+		{635DCA1D-E4F0-4931-8CAE-555CD35F26AB}.Release|x64.ActiveCfg = Release|x64
+		{635DCA1D-E4F0-4931-8CAE-555CD35F26AB}.Release|x64.Build.0 = Release|x64
+		{635DCA1D-E4F0-4931-8CAE-555CD35F26AB}.Release|x86.ActiveCfg = Release|Win32
+		{635DCA1D-E4F0-4931-8CAE-555CD35F26AB}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {42E2A3CA-6737-4D6C-8504-524ED29D59F9}
+	EndGlobalSection
+EndGlobal

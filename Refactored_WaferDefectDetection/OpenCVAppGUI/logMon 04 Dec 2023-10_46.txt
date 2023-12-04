@@ -1,0 +1,12 @@
+[ Left ] Original Histogram  min Value = 0.000  max Value = 255.000
+[ Center ] Add 30 Histogram  min Value = 30.000  max Value = 255.000
+[ Right ] gamma 0.4 Histogram  min Value = 0.000  max Value = 255.000
+[ Left ] Original Histogram  min Value = 0.000  max Value = 255.000
+[ Center ] Add 30 Histogram  min Value = 30.000  max Value = 255.000
+[ Right ] gamma 0.4 Histogram  min Value = 0.000  max Value = 255.000
+[ Left ] Original Histogram  min Value = 0.000  max Value = 255.000
+[ Center ] Add 30 Histogram  min Value = 30.000  max Value = 255.000
+[ Right ] gamma 0.4 Histogram  min Value = 0.000  max Value = 255.000
+[ Left ] Original Histogram  min Value = 0.000  max Value = 255.000
+[ Center ] Add 30 Histogram  min Value = 30.000  max Value = 255.000
+[ Right ] gamma 0.4 Histogram  min Value = 0.000  max Value = 255.000
