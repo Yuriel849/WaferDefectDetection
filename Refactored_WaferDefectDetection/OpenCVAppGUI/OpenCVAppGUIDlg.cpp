@@ -94,10 +94,6 @@ void COpenCVAppGUIDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST_LOG, _listBoxLog);
-	DDX_Control(pDX, IDC_RADIO1, CBtn_donut);
-	DDX_Control(pDX, IDC_RADIO2, CBtn_scratch);
-	DDX_Control(pDX, IDC_RADIO3, CBtn_location);
-	DDX_Control(pDX, IDC_RADIO4, CBtn_edge);
 }
 
 BEGIN_MESSAGE_MAP(COpenCVAppGUIDlg, CDialogEx)
@@ -402,6 +398,8 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 	vInsps[0]->OnPreprocess(src);
 	vector<DefectInfo> vErrInfo(vInsps[0]->GetChipRegions().size());
 
+	string QR_val = "WAFER_DEFAULT";
+	string Yield_val = "YIELD_0";
 	
 	for (size_t i = 0; i < vInsps.size(); i++)
 	{
@@ -464,21 +462,22 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 			cv::rectangle(drawResult, rtQR, color, 2);
 			rtQR.y -= 50;
 			putText(drawResult, pins->GetQRCode(), Point(rtQR.x, rtQR.y), FONT_HERSHEY_SIMPLEX, 2.7, eJudgeColor[eJudge_OK], 7);
+			QR_val = pins->GetQRCode();
 		}
 	}
 	
-
-
-	
-
-
-
 	// cout << flaw_num << endl;	// 이 칩의 총 결함 개수가 제대로 저장되었는가 확인 
 	vInsps[0]->OnPostprocess(src);
 
+	// binary 결과 사진 저장할 변수
+	_ResultImage = drawResult;
 
 	_bShowResult = _bShowDebug = true;
 	Invalidate(FALSE);
+	string QR_out = "Wafer QR Code is : " + QR_val;
+	string Yield_out = "Wafer Yield is : " + Yield_val + "%";
+	AddString(QR_out.c_str());
+	AddString(Yield_out.c_str());
 }
 
 int COpenCVAppGUIDlg::OnAllocateBuffer(int cols, int rows) //이미지 Load 시 사용
@@ -697,7 +696,36 @@ void COpenCVAppGUIDlg::AddString(LPCTSTR lpszLog)
 }
 LRESULT COpenCVAppGUIDlg::OnAddString(WPARAM wParam, LPARAM lParam)
 {
+	if (!GetSafeHwnd()) return 0;
 
+	if (_listBoxLog.GetCount() > 500)
+	{
+		_listBoxLog.ResetContent();
+	}
+
+	LPCTSTR lpszLog = reinterpret_cast <LPCTSTR> (lParam);
+	SYSTEMTIME t;
+	GetLocalTime(&t);
+	CString nStrMsg = _T("");
+	nStrMsg += lpszLog;
+	int nIdx = _listBoxLog.AddString(nStrMsg);
+	_listBoxLog.SetTopIndex(_listBoxLog.GetCount() - 1);
+
+	stringstream ssTime;
+	time_t const now_c = time(NULL);
+	//ssTime << put_time(localtime(&now_c), "%a %d %b %Y - %I_%M_%S%p");
+	ssTime << put_time(localtime(&now_c), "%a %d %b %Y-%I_%M");
+	string time_c = ssTime.str();
+
+	ofstream file;
+	string fileName;
+	fileName += "log";
+	fileName += ssTime.str();
+	fileName += ".txt";
+
+	file.open(fileName, ios::out | ios::app);
+	file << nStrMsg << endl;
+	file.close();
 
 	return 0;
 }
