@@ -35,15 +35,16 @@ Scalar eJudgeColor[] =
    CV_RGB(255, 200, 234),
    CV_RGB(250, 178, 8),
    CV_RGB(80,252,254),
-   CV_RGB(0,0,0)
+   CV_RGB(250, 225, 0)
 };
 string eItemList[] =
 {
-	"OK",
-	"Scratch",
-	"Contam..",
-	"Crack",
-	"QR",
+   "OK",
+   "Scratch",
+   "Contam..",
+   "Crack",
+   "QR",
+   "Color"
 };
 
 
@@ -372,7 +373,7 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 		cv::rectangle(drawResult, rtInfo, eJudgeColor[i], FILLED);
 
 		string msg = eItemList[i];
-		putText(drawResult, msg, Point(rtInfo.x+rtInfo.width+30, rtInfo.y+rtInfo.height/2+10), FONT_HERSHEY_SIMPLEX, 1.8, eJudgeColor[i], 7);
+		putText(drawResult, msg, Point(rtInfo.x + rtInfo.width + 30, rtInfo.y + rtInfo.height / 2 + 10), FONT_HERSHEY_SIMPLEX, 1.8, eJudgeColor[i], 7);
 	}
 
 
@@ -391,16 +392,67 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 	//InspGeneric* pins = &insp_scratch;
 	//InspGeneric* ptr[3] = { &insp_scratch,&insp_contRe,&insp_cont };
 
+	double mean_H = 0.0;
+	cv::Mat bin;
+	{//Detect Color: juhee
 
-	
-	
+		cv::threshold(src, bin, 230, 250, cv::THRESH_BINARY_INV);
+		// close
+		int kernelSz = 4;
+		int shape = cv::MorphShapes::MORPH_RECT;
+		cv::Size sz = cv::Size(2 * kernelSz + 3, 2 * kernelSz + 2);
+		cv::Mat SE = cv::getStructuringElement(shape, sz);
+		cv::Mat close;
+		int type = cv::MorphTypes::MORPH_CLOSE;
+		cv::morphologyEx(bin, close, type, SE);
+
+		cv::RNG rng(12345);
+		std::vector<std::vector<cv::Point>> contours;
+		std::vector<cv::Vec4i> hierarchy;
+		cv::findContours(close, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+
+		// Find contour maximum area
+		size_t maxContourIndex = 0;
+		double maxContourArea = 0;
+
+		for (size_t i = 0; i < contours.size(); i++)
+		{
+			double area = cv::contourArea(contours[i]);
+			if (area > maxContourArea)
+			{
+				maxContourArea = area;
+				maxContourIndex = i;
+			}
+		}
+
+		cv::Mat contourMask = cv::Mat::zeros(close.size(), CV_8UC1);	//mask with only the selected contour filled
+		cv::drawContours(contourMask, contours, static_cast<int>(maxContourIndex), cv::Scalar(255), cv::FILLED);
+
+		// Apply the mask to the original image
+		cv::Mat circleImage;
+		drawResult.copyTo(circleImage, contourMask);
+
+		cv::Mat hsv_image;
+		cv::cvtColor(circleImage, hsv_image, cv::COLOR_BGR2HSV);	//HSV 변환
+
+		std::vector<cv::Mat> channels;
+		cv::split(hsv_image, channels);
+		cv::Mat hue_channel = channels[0];	// Hue 채널 가져오기
+
+		mean_H = cv::mean(hue_channel)[0];	//평균 Hue(색조)
+
+		//cv::putText(drawResult, "Mean H : " + std::to_string(mean_H), cv::Point(50, 1600), cv::FONT_HERSHEY_SIMPLEX, 2, CV_RGB(250, 225, 0), 3);
+	}
+
+
+
 	vector<cv::Rect> vRois_Small, vRois_Large;
 	vInsps[0]->OnPreprocess(src);
 	vector<DefectInfo> vErrInfo(vInsps[0]->GetChipRegions().size());
 
 	string QR_val = "WAFER_DEFAULT";
 	string Yield_val = "YIELD_0";
-	
+
 	for (size_t i = 0; i < vInsps.size(); i++)
 	{
 		InspGeneric* pins = vInsps[i];
@@ -425,7 +477,7 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 		string msg;
 		for (size_t k = 0; k < vChips.size(); k++)
 		{
-			
+
 			Rect rt = vErrInfo[k].rt;
 			switch (vErrInfo[k].Judge)
 			{
@@ -450,10 +502,10 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 				break;
 			}
 
-			
+
 			cv::rectangle(drawResult, vChips[k], color, FILLED);
 
-			
+
 		}
 
 		if (pins->GetQRCode() != "")
@@ -461,11 +513,16 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 			cv::Rect rtQR = pins->GetQRArea();
 			cv::rectangle(drawResult, rtQR, color, 2);
 			rtQR.y -= 50;
-			putText(drawResult, pins->GetQRCode(), Point(rtQR.x, rtQR.y), FONT_HERSHEY_SIMPLEX, 2.7, eJudgeColor[eJudge_OK], 7);
+			putText(drawResult, pins->GetQRCode(), Point(rtQR.x, rtQR.y), FONT_HERSHEY_SIMPLEX, 2.7, eJudgeColor[eJudge_QR], 7);
 			QR_val = pins->GetQRCode();
 		}
+		if (mean_H > 0.0)
+		{
+			//display color 
+			cv::putText(drawResult, "Color value : " + std::to_string(mean_H), cv::Point(50, 1660), cv::FONT_HERSHEY_SIMPLEX, 2, eJudgeColor[5], 3);
+		}
 	}
-	
+
 	// cout << flaw_num << endl;	// 이 칩의 총 결함 개수가 제대로 저장되었는가 확인 
 	vInsps[0]->OnPostprocess(src);
 
@@ -476,8 +533,10 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 	Invalidate(FALSE);
 	string QR_out = "Wafer QR Code is : " + QR_val;
 	string Yield_out = "Wafer Yield is : " + Yield_val + "%";
+	string Color_out = "Wafer color value is : " + std::to_string(mean_H);
 	AddString(QR_out.c_str());
 	AddString(Yield_out.c_str());
+	AddString(Color_out.c_str());
 }
 
 int COpenCVAppGUIDlg::OnAllocateBuffer(int cols, int rows) //이미지 Load 시 사용
@@ -711,21 +770,21 @@ LRESULT COpenCVAppGUIDlg::OnAddString(WPARAM wParam, LPARAM lParam)
 	int nIdx = _listBoxLog.AddString(nStrMsg);
 	_listBoxLog.SetTopIndex(_listBoxLog.GetCount() - 1);
 
-	stringstream ssTime;
-	time_t const now_c = time(NULL);
-	//ssTime << put_time(localtime(&now_c), "%a %d %b %Y - %I_%M_%S%p");
-	ssTime << put_time(localtime(&now_c), "%a %d %b %Y-%I_%M");
-	string time_c = ssTime.str();
+	//stringstream ssTime;
+	//time_t const now_c = time(NULL);
+	////ssTime << put_time(localtime(&now_c), "%a %d %b %Y - %I_%M_%S%p");
+	//ssTime << put_time(localtime(&now_c), "%a %d %b %Y-%I_%M");
+	//string time_c = ssTime.str();
 
-	ofstream file;
-	string fileName;
-	fileName += "log";
-	fileName += ssTime.str();
-	fileName += ".txt";
+	//ofstream file;
+	//string fileName;
+	//fileName += "log";
+	//fileName += ssTime.str();
+	//fileName += ".txt";
 
-	file.open(fileName, ios::out | ios::app);
-	file << nStrMsg << endl;
-	file.close();
+	//file.open(fileName, ios::out | ios::app);
+	//file << nStrMsg << endl;
+	//file.close();
 
 	return 0;
 }

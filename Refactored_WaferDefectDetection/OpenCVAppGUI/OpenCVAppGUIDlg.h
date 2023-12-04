@@ -33,7 +33,8 @@ enum {
 	eImgDebugColor, 
 	eImgDrawColor, 
 	eImgResultColor, 
-	eImgBufferMax 
+	eImgBufferMax,
+	eImgColorValue //CV_RGB(250, 225, 0) 
 };
 
 
