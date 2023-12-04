@@ -30,12 +30,12 @@
 
 Scalar eJudgeColor[] =
 {
-	CV_RGB(0,255,0),
-	CV_RGB(255, 0, 0),
-	CV_RGB(255, 200, 234),
-	CV_RGB(255, 255, 0),
-	CV_RGB(200,200,200),
-	CV_RGB(0,0,0)
+   CV_RGB(0,255,0),
+   CV_RGB(255, 0, 0),
+   CV_RGB(255, 200, 234),
+   CV_RGB(250, 178, 8),
+   CV_RGB(80,252,254),
+   CV_RGB(0,0,0)
 };
 string eItemList[] =
 {
