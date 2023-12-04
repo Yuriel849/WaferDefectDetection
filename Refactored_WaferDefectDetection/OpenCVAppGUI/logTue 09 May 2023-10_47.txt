@@ -1,2 +1,0 @@
-System Log :: Start()
-System Log :: Start()
