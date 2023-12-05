@@ -320,7 +320,6 @@ void COpenCVAppGUIDlg::UpdateDispSrc() //이미지 올릴 때(load) 사용
 
 }
 
-
 void COpenCVAppGUIDlg::OnBnClickedBtnLoad()
 {
 	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
@@ -364,7 +363,6 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 	_bShowResult = _bShowDebug = false;
 	Mat drawResult = _mMatBuff[eImgDrawColor];
 
-
 	//Legend
 	int length = sizeof(eItemList) / sizeof(eItemList[0]);
 	for (size_t i = 0; i < length; i++)
@@ -376,12 +374,10 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 		putText(drawResult, msg, Point(rtInfo.x + rtInfo.width + 30, rtInfo.y + rtInfo.height / 2 + 10), FONT_HERSHEY_SIMPLEX, 1.8, eJudgeColor[i], 7);
 	}
 
-
 	if (_mMatBuff[eImgSrcGray].empty())
 	{
 		AfxMessageBox("NO IMAGE");
 	}
-
 
 	int flaw_num = 0;
 
@@ -395,7 +391,6 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 	double mean_H = 0.0;
 	cv::Mat bin;
 	{//Detect Color: juhee
-
 		cv::threshold(src, bin, 230, 250, cv::THRESH_BINARY_INV);
 		// close
 		int kernelSz = 4;
@@ -444,8 +439,6 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 		//cv::putText(drawResult, "Mean H : " + std::to_string(mean_H), cv::Point(50, 1600), cv::FONT_HERSHEY_SIMPLEX, 2, CV_RGB(250, 225, 0), 3);
 	}
 
-
-
 	vector<cv::Rect> vRois_Small, vRois_Large;
 	vInsps[0]->OnPreprocess(src);
 	vector<DefectInfo> vErrInfo(vInsps[0]->GetChipRegions().size());
@@ -470,14 +463,12 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 		pins->OnTestProcess(src, drawing, vChips, flaw_num);
 		vErrInfo = pins->GetErrRegions();
 
-
 		//display
 		int scratch_cnt = 0;
 		Scalar color;
 		string msg;
 		for (size_t k = 0; k < vChips.size(); k++)
 		{
-
 			Rect rt = vErrInfo[k].rt;
 			switch (vErrInfo[k].Judge)
 			{
@@ -490,7 +481,6 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 				scratch_cnt++;
 				cv::putText(drawing, msg, vChips[i].br(), FONT_HERSHEY_SIMPLEX, 1, color, 2, 8);      //0, 255, 255
 				cv::putText(drawing, pins->GetInspName(), vChips[i].tl(), FONT_HERSHEY_SIMPLEX, 0.5, color, 1.5, 8);
-
 				break;
 			case eJudge_Contamination:
 				color = eJudgeColor[eJudge_Contamination];
@@ -502,10 +492,7 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 				break;
 			}
 
-
 			cv::rectangle(drawResult, vChips[k], color, FILLED);
-
-
 		}
 
 		if (pins->GetQRCode() != "")
@@ -532,10 +519,10 @@ void COpenCVAppGUIDlg::OnBnClickedBtnInspection()
 	_bShowResult = _bShowDebug = true;
 	Invalidate(FALSE);
 	string QR_out = "Wafer QR Code is : " + QR_val;
-	string Yield_out = "Wafer Yield is : " + Yield_val + "%";
+	//string Yield_out = "Wafer Yield is : " + Yield_val + "%";
 	string Color_out = "Wafer color value is : " + std::to_string(mean_H);
 	AddString(QR_out.c_str());
-	AddString(Yield_out.c_str());
+	//AddString(Yield_out.c_str());
 	AddString(Color_out.c_str());
 }
 
@@ -566,8 +553,6 @@ int COpenCVAppGUIDlg::OnAllocateBuffer(int cols, int rows) //이미지 Load 시 
 	}
 
 	Mat vi = _mMatBuff[eImgSrcColor];
-
-
 
 	_mMatBuff[eImgSrcColor].copyTo(_mMatBuff[eImgDrawColor]);
 
