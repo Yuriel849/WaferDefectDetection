@@ -23,21 +23,22 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
     vector<cv::Rect> vRois_Small, vRois_Large;
     for (size_t k = 0; k < contours.size(); k++)
     {
-        RotatedRect rrt = minAreaRect(contours[k]);//°´Ã¼ ¿Ü°û¼±À» ³ÑÁö ¾ÊÀ» ¸¸Å­ ÀÇ »çÀÌÁî¸¦ wRrt¿¡ ´ã¾ÆÁÜ
-        Rect rt = rrt.boundingRect(); // °´Ã¼ÀÇ À§Ä¡¿¡ »ó°ü¾øÀÌ Á¤¹æÇâ »ç°¢Çü »ý¼º
-        //À§ Á¤»ç°¢Çü »ý¼º ÀÌÈÄ Æ¯Á¤ ±æÀÌ ÃßÃâ
-        if (13 <= rt.width && rt.width <= 17)//°´Ã¼ °¢ small »çÀÌÁî rt±æÀÌ 13ÀÌ»ó 17ÀÌÇÏÀÎ °æ¿ì
+        RotatedRect rrt = minAreaRect(contours[k]);
+        Rect rt = rrt.boundingRect();
+        
+        if (13 <= rt.width && rt.width <= 17)
         {
-            vRois_Small.push_back(rt); //°¢ ¼¼ºÎSmall °´Ã¼ Ãâ·Â
-            cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 255, 0), 1); //rrt.boundingRect()À§¿¡¼­ ±¸ÇÑ »ç°¢Çü °ª¿¡ »ç°¢ÇüÀ» ±×·ÁÁÜ
+            vRois_Small.push_back(rt);
+            cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 255, 0), 1);
         }
-        if (18 <= rt.width && rt.width <= 22)//°´Ã¼ °¢ small »çÀÌÁî rt±æÀÌ 18ÀÌ»ó 22ÀÌÇÏÀÎ °æ¿ì
+        if (18 <= rt.width && rt.width <= 22)
         {
-            vRois_Large.push_back(rt); //°¢ Large¼¼ºÎ °´Ã¼ Ãâ·Â
-            cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 0, 255), 1); //rrt.boundingRect()À§¿¡¼­ ±¸ÇÑ »ç°¢Çü °ª¿¡ »ç°¢ÇüÀ» ±×·ÁÁÜ
+            vRois_Large.push_back(rt);
+            cv::rectangle(ptrn_Draw, rrt.boundingRect(), CV_RGB(0, 0, 255), 1);
         }
 
     }
+    int checking0 = 0;
 
     // Calculate average widths and heights of the large and small squares in each chip
     int sum_Width_Large = 0, sum_Height_Large = 0, sum_Width_Small = 0, sum_Height_Small = 0;
@@ -56,21 +57,23 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
     avg_Width_Large = static_cast<float>(sum_Width_Large) / vRois_Large.size();
     avg_Height_Large = static_cast<float>(sum_Height_Large) / vRois_Large.size();
 
+    int a = 0;
+
     // Identify the large and small squares in each chip across the wafer under inspection
-    vector<cv::Rect> vRois; //ÀüÃ¼ ÀÌ¹ÌÁö ¹éÅÍ ¹è¿­·Î ÀúÀå
+    vector<cv::Rect> vRois; //ï¿½ï¿½Ã¼ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½è¿­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     Mat obj_Region;
-    Point ptThrehold = Point(888, 150); //ÀÌÁøÈ­µÈ ¹è°æ »öº¸´Ù ¹àÀ» °æ¿ì Â÷ÀÌ¸¦ ÁÖ±â À§ÇØ ¹è°æ À§Ä¡ °ª Æ÷ÀÎÅÍ·Î ¼³Á¤ 
-    double min_threshold = src.data[ptThrehold.y * src.cols + ptThrehold.x] + 5; //¹è°æ»öº¸´Ù ¹àÀ» ºÎºÐ ¼³Á¤ÇÏ¿©
-    cv::threshold(src, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);// obj_Region¿¡ ÀÌÁøÈ­ ÀÛ¾÷
-    contours.clear(); //»õ·Ó°Ô ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ ¹éÅÍ Æ÷ÀÎÆ® º¯¼ö contourss »ý¼º
-    hierarchy.clear(); //¹éÅÍ hierarchyyº¯¼ö »ý¼º
-    cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //°´Ã¼ ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ °´Ã¼ ¿Ü°û¼± °ËÃâ
-    for (size_t k = 0; k < contours.size(); k++) //contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+    Point ptThrehold = Point(888, 150); //ï¿½ï¿½ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+    double min_threshold = src.data[ptThrehold.y * src.cols + ptThrehold.x] + 5; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½
+    cv::threshold(src, obj_Region, min_threshold, 255, ThresholdTypes::THRESH_BINARY);// obj_Regionï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ ï¿½Û¾ï¿½
+    contours.clear(); //ï¿½ï¿½ï¿½Ó°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ contourss ï¿½ï¿½ï¿½ï¿½
+    hierarchy.clear(); //ï¿½ï¿½ï¿½ï¿½ hierarchyyï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    cv::findContours(obj_Region, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½Ü°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    for (size_t k = 0; k < contours.size(); k++) //contourss.size();ï¿½ï¿½ Å©ï¿½â¸¸Å­ forï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.(ï¿½ï¿½ï¿½Ó°ï¿½ ï¿½ï¿½ï¿½Çµï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½) 
     {
         double area = contourArea(contours[k]);
 
-        RotatedRect rrt = minAreaRect(contours[k]);//°´Ã¼ ¿Ü°û¼±À» ³ÑÁö ¾ÊÀ» ¸¸Å­ ÀÇ »çÀÌÁî¸¦ wRrt¿¡ ´ã¾ÆÁÜ
-        Rect rt = rrt.boundingRect(); // °´Ã¼ÀÇ À§Ä¡¿¡ »ó°ü¾øÀÌ Á¤¹æÇâ »ç°¢Çü »ý¼º
+        RotatedRect rrt = minAreaRect(contours[k]);//ï¿½ï¿½Ã¼ ï¿½Ü°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å­ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½î¸¦ wRrtï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+        Rect rt = rrt.boundingRect(); // ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         if (160 <= rt.width && rt.width <= 200)
         {
@@ -80,71 +83,68 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
     }
 
     //sub chips
-    vector<cv::Rect> vRois_Small_Err, vRois_Large_Err; // ½º¸ô °´Ã¼, ¶óÁö °´Ã¼ °ËÃâ ÀúÀåÀ» À§ÇÑ ¹éÅÍ ¼³Á¤
+    vector<cv::Rect> vRois_Small_Err, vRois_Large_Err; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     vector<int> remember;
-    for (size_t k = 0; k < vRois.size(); k++) // ÀüÃ¼ ÀÌ¹ÌÁö °´Ã¼vRois.size()ÀÇ °³¼ö¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+    for (size_t k = 4; k < vRois.size(); k++) // ï¿½ï¿½Ã¼ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼vRois.size()ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å­ forï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.(ï¿½ï¿½ï¿½Ó°ï¿½ ï¿½ï¿½ï¿½Çµï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½) 
     {
-        Mat sub_img = src(vRois[k]).clone(); // vRois[k]¹øÂ° °´Ã¼ sub_img¿¡ »ðÀÔ 
+        Mat sub_img = src(vRois[k]).clone(); // vRois[k]ï¿½ï¿½Â° ï¿½ï¿½Ã¼ sub_imgï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         Mat sub_img_draw;
         cvtColor(sub_img, sub_img_draw, COLOR_GRAY2BGR);
 
         //large pad
-        int inflate = 7; //°´Ã¼ rect ÁÂ¿ì À§Ä¡ ¿ÀÂ÷¸¦ ÁÙÀÌ±â À§ÇØ 7¸¸Å­ ¿Å±â±â À§ÇÑ º¯¼ö ¼³Á¤
-        for (size_t i = 0; i < vRois_Large.size(); i++) // ¼¼ºÎ ¶óÁö °´Ã¼ »çÀÌÁî¸¸Å­ ¹Ýº¹
+        int inflate = 7; //ï¿½ï¿½Ã¼ rect ï¿½Â¿ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ 7ï¿½ï¿½Å­ ï¿½Å±ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        for (size_t i = 0; i < vRois_Large.size(); i++) // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½î¸¸Å­ ï¿½Ýºï¿½
         {
-            Rect rt = vRois_Large[i]; // ¼¼ºÎ ¶óÁö°´Ã¼ i¹øÂ° rt¿¡ ´ãÀ½
-            rt.x -= inflate; // ¼¼ºÎ ¶óÁö°´Ã¼ i¹øÂ°ÀÇ xÀ§Ä¡¿¡¼­ 7¸¸Å­ »©¼­ ÁÂ·Î ÀÌµ¿ (½º¸ô°´Ã¼ x ÁÂÇ¥¿¡ -7¸¸Å­ ¿ÞÂÊÀ¸·Î xÃà ÀÌµ¿)
-            rt.width += inflate * 2; // °¡·Î»çÀÌÁî µðÆúÆ® 5¸¦ 2¹è·Î ´Ã·Á À±°ûÀ» Àâ¾ÆÁØ´Ù.//°¡·Î ±æÀÌ 7*2=14¸¸Å­ rt.width±æÀÌ ¼³Á¤ÇÏ¿© ¹üÀ§ ¼³Á¤
-            rt.height += inflate + 4;// ¼¼·Î»çÀÌÁî µðÆúÆ® 5¸¦ 2¹è·Î ´Ã·Á À±°ûÀ» Àâ¾ÆÁØ´Ù.rt.height += inflate * 2(½ºÅ©·¡Ä¡±îÁö Àâ¾ÆÁà¼­  + 4·Î Å©±â Á¶Á¤
+            Rect rt = vRois_Large[i];
+            rt.x -= inflate;
+            rt.width += inflate * 2;
+            rt.height += inflate + 4;
             //     
-            cv::rectangle(sub_img_draw, rt, CV_RGB(255, 255, 0), 1); //sub_img_draw¿¡ rt°´Ã¼ÀÇ Á¤º¸¸¸Å­ »ç°¢Çü ±×·ÁÁÜ
+            cv::rectangle(sub_img_draw, rt, CV_RGB(255, 255, 0), 1);
 
-            Mat Pad = sub_img(rt).clone(); // ((¼¼ºÎ °´Ã¼ »ç°¢Çü Á¤º¸¸¦ µû¼­ Pad¿¡ º¹»ç))
+            Mat Pad = sub_img(rt).clone();
             Mat Pad_Bin;
-            cv::threshold(Pad, Pad_Bin, obj_PAD_threshold, 255, ThresholdTypes::THRESH_BINARY); //ÀÌÁøÈ­
+            cv::threshold(Pad, Pad_Bin, obj_PAD_threshold, 255, ThresholdTypes::THRESH_BINARY);
 
-            //morpology ³ëÀÌÁî Á¦°Å ºÎºÐ
-            int kernelSz = 2; //³ëÀÌÁî Å©±â
-            int shape = MorphShapes::MORPH_RECT; //
-            cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); //Á¤lSz + 1) 
-            Mat SE = cv::getStructuringElement(shape, sz); // 
-            Mat Pad_Open; //³ëÀÌÁî°¡ Á¦°ÅµÈ »óÅÂ.
-            int type = MorphTypes::MORPH_OPEN; // ³ëÀÌÁî¸¦ Á¦°ÅÇÏ´Â ±â´É MORPH_OPENÀ» type¿¡ ´ã°Ú´Ù.
-            cv::morphologyEx(Pad_Bin, Pad_Open, type, SE);// cv::morphologyEx(src_bin(ÀÔ·Â), src_open(Ãâ·Â), type, SE);//morphologyEx ³ëÀÌÁî¸¦ Á¦°ÅÇÏ°Ú´Ù. 
+            int kernelSz = 2;
+            int shape = MorphShapes::MORPH_RECT;
+            cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1);
+            Mat SE = cv::getStructuringElement(shape, sz);
+            Mat Pad_Open;
+            int type = MorphTypes::MORPH_OPEN;
+            cv::morphologyEx(Pad_Bin, Pad_Open, type, SE);
 
-            contours.clear(); //clear¸¦ ½á¼­ »õ·Ò°Ô ÃÊ±âÈ­
-            hierarchy.clear(); //clear¸¦ ½á¼­ »õ·Ò°Ô ÃÊ±âÈ­
-            cv::findContours(Pad_Open, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //Pad_BinÀÇ °¢ °´Ã¼ ¿Ü°û¼± °ËÃâ
-            for (size_t p = 0; p < contours.size(); p++) //Pad_BinÀÇ °¢ °´Ã¼ ¼ö¸¸Å­ for¹®À» µ¹¸°´Ù. 
+            contours.clear();
+            hierarchy.clear();
+            cv::findContours(Pad_Open, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE);
+            for (size_t p = 0; p < contours.size(); p++)
             {
-                double area = contourArea(contours[p]); //°ËÃâµÈ °´Ã¼ ÀüÃ¼ ¸éÀû °ª area¿¡ ÀúÀå
-                if (area < 10) continue; //area°¡ 10À» ³ÑÁö ¾ÊÀ¸¸é Á¾·á
-                RotatedRect rrt = minAreaRect(contours[p]);//°´Ã¼ ¿Ü°û¼±À» ³ÑÁö ¾ÊÀ» ¸¸Å­ ÀÇ »çÀÌÁî¸¦ rrt¿¡ ´ã¾ÆÁÜ
-                Rect rt = rrt.boundingRect(); // °´Ã¼ÀÇ À§Ä¡¿¡ »ó°ü¾øÀÌ Á¤¹æÇâ »ç°¢Çü »ý¼ºÇÏ¿© rt¿¡ ´ã¾ÆÁÜ
+                double area = contourArea(contours[p]);
+                if (area < 10) continue;
+                RotatedRect rrt = minAreaRect(contours[p]);
+                Rect rt = rrt.boundingRect();
 
-                //large »çÀÌÁî ÀÏÁ¤ Á¶°Ç ±æÀÌ ÃßÃâ  //rt °ËÃâµÈ °´Ã¼ ±æÀÌ 18 <= rt.width && rt.width <= 22
                 if (((avg_Width_Large * 0.9) <= rt.width && rt.width <= (avg_Width_Large * 1.1))
                     && ((avg_Height_Large * 0.9) <= rt.height && rt.height <= (avg_Height_Large * 1.1))) {}
                 else
                 {
                     vRegions->push_back(vRois[k]);
-                    Rect rtSubErrRgn = rt; //Á¶°Ç¿¡  ÃæÁ·ÇÏÁö ¾ÊÀº rt°ª rtSubErrRgn¿¡ ÀúÀå
-                    rtSubErrRgn.x += vRois_Large[i].x - inflate; // xÁ¡ À§Ä¡¿¡ -7¸¸Å­ À§Ä¡ Á¶Á¤
-                    rtSubErrRgn.y += vRois_Large[i].y; //yÁ¡ À§Ä¡´Â ±×´ë·Î
-                    cv::rectangle(sub_img_draw, rtSubErrRgn, CV_RGB(0, 255, 255), 1); //À§Ä¡°ª µû¼­ »ç°¢Çü ±×·ÁÁÜ
+                    cnt_Large_Err++;
+                    Rect rtSubErrRgn = rt;
+                    rtSubErrRgn.x += vRois_Large[i].x - inflate;
+                    rtSubErrRgn.y += vRois_Large[i].y;
+                    cv::rectangle(sub_img_draw, rtSubErrRgn, CV_RGB(0, 255, 255), 1);
 
                     Rect rtDraw = rt;
-                    rtDraw.x += vRois_Large[i].x + vRois[k].x - inflate; //rtDraw.x¿¡ vRois[k].xÀüÃ¼ Å©±â Áß°£ °´Ã¼ ÃßÃâ ÁÂÇ¥¸¦ ´õÇÏ°í ¼¼ºÎ°´Ã¼ xÁÂÇ¥ vRois_Small[i].x¸¦ ´ã¾Æ Åõ°úÀûÀ¸·Î ÇØ´ç ¼¼ºÎ°´Ã¼ xÁÂÇ¥¸¦ Á÷Á¢ÀûÀ¸·Î °¡¸®Å°°Ô µÊ.
-                    rtDraw.y += vRois_Large[i].y + vRois[k].y; //rtDraw.y¿¡ vRois[k].yÀüÃ¼ Å©±â Áß°£ °´Ã¼ ÃßÃâ ÁÂÇ¥¸¦ ´õÇÏ°í ¼¼ºÎ°´Ã¼ yÁÂÇ¥ vRois_Small[i].y¸¦ ´ã¾Æ Åõ°úÀûÀ¸·Î ÇØ´ç ¼¼ºÎ°´Ã¼ yÁÂÇ¥¸¦ Á÷Á¢ÀûÀ¸·Î °¡¸®Å°°Ô µÊ.
-                    vRois_Large_Err.push_back(rtDraw); // Á÷Á¢ÀûÀ¸·Î °¡¸®Å² ÁÂÇ¥ 
-                    cv::rectangle(sub_img_draw, rrt.boundingRect(), CV_RGB(255, 0, 0), 1); //
-                    //»öÄ¥ÇÒ Ä­ ±â¾ïÇÏ±â 
+                    rtDraw.x += vRois_Large[i].x + vRois[k].x - inflate;
+                    rtDraw.y += vRois_Large[i].y + vRois[k].y;
+                    vRois_Large_Err.push_back(rtDraw);
                     remember.push_back(k);
                 }
             }
         }
         //small pad   
-        for (size_t i = 0; i < vRois_Small.size(); i++) //small pads ÇÏ³ª¾¿ º¸¸é¼­ ÀÌÁøÈ­, ¿À·ù È®ÀÎ
+        for (size_t i = 0; i < vRois_Small.size(); i++) //small pads ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½é¼­ ï¿½ï¿½ï¿½ï¿½È­, ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         {
             Rect rt = vRois_Small[i];
             rt.x -= inflate;
@@ -158,24 +158,24 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
             Mat Pad_Bin;
             cv::threshold(Pad, Pad_Bin, obj_PAD_threshold, 255, ThresholdTypes::THRESH_BINARY);
 
-            //morpology ³ëÀÌÁî Á¦°Å ºÎºÐ
-            int kernelSz = 2; //³ëÀÌÁî Å©±â
+            //morpology ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½
+            int kernelSz = 2; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½
             int shape = MorphShapes::MORPH_RECT; //
-            cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); //Á¤lSz + 1) 
+            cv::Size sz = Size(2 * kernelSz + 1, 2 * kernelSz + 1); //ï¿½ï¿½lSz + 1) 
             Mat SE = cv::getStructuringElement(shape, sz); // 
-            Mat Pad_Open; //³ëÀÌÁî°¡ Á¦°ÅµÈ »óÅÂ.
-            int type = MorphTypes::MORPH_OPEN; // ³ëÀÌÁî¸¦ Á¦°ÅÇÏ´Â ±â´É MORPH_OPENÀ» type¿¡ ´ã°Ú´Ù.
-            cv::morphologyEx(Pad_Bin, Pad_Open, type, SE);// cv::morphologyEx(src_bin(ÀÔ·Â), src_open(Ãâ·Â), type, SE);//morphologyEx ³ëÀÌÁî¸¦ Á¦°ÅÇÏ°Ú´Ù. 
+            Mat Pad_Open; //ï¿½ï¿½ï¿½ï¿½ï¿½î°¡ ï¿½ï¿½ï¿½Åµï¿½ ï¿½ï¿½ï¿½ï¿½.
+            int type = MorphTypes::MORPH_OPEN; // ï¿½ï¿½ï¿½ï¿½ï¿½î¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ MORPH_OPENï¿½ï¿½ typeï¿½ï¿½ ï¿½ï¿½Ú´ï¿½.
+            cv::morphologyEx(Pad_Bin, Pad_Open, type, SE);// cv::morphologyEx(src_bin(ï¿½Ô·ï¿½), src_open(ï¿½ï¿½ï¿½), type, SE);//morphologyEx ï¿½ï¿½ï¿½ï¿½ï¿½î¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°Ú´ï¿½. 
 
             contours.clear(); //
             hierarchy.clear(); //
-            cv::findContours(Pad_Open, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //°´Ã¼ ¹üÀ§°ªÀ» ±¸ÇÏ±â À§ÇØ °´Ã¼ ¿Ü°û¼± °ËÃâ
-            for (size_t p = 0; p < contours.size(); p++) //contourss.size();ÀÇ Å©±â¸¸Å­ for¹®À» µ¹¸°´Ù.(»õ·Ó°Ô Á¤ÀÇµÈ °´Ã¼ »çÀÌÁî(¼ö) 
+            cv::findContours(Pad_Open, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE); //ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½Ü°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            for (size_t p = 0; p < contours.size(); p++) //contourss.size();ï¿½ï¿½ Å©ï¿½â¸¸Å­ forï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.(ï¿½ï¿½ï¿½Ó°ï¿½ ï¿½ï¿½ï¿½Çµï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½) 
             {
                 double area = contourArea(contours[p]);
                 if (area < 10) continue;
-                RotatedRect rrt = minAreaRect(contours[p]);//°´Ã¼ ¿Ü°û¼±À» ³ÑÁö ¾ÊÀ» ¸¸Å­ ÀÇ »çÀÌÁî¸¦ rrt¿¡ ´ã¾ÆÁÜ
-                Rect rt = rrt.boundingRect(); // rt °´Ã¼ÀÇ À§Ä¡¿¡ »ó°ü¾øÀÌ Á¤¹æÇâ »ç°¢Çü »ý¼º
+                RotatedRect rrt = minAreaRect(contours[p]);//ï¿½ï¿½Ã¼ ï¿½Ü°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å­ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½î¸¦ rrtï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
+                Rect rt = rrt.boundingRect(); // rt ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ç°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
                 if (((avg_Width_Small * 0.8) <= rt.width && rt.width <= (avg_Width_Small * 1.2))
                     && ((avg_Height_Small * 0.8) <= rt.height && rt.height <= (avg_Height_Small * 1.2))) {}
@@ -189,18 +189,18 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
 
                     // cv::rectangle(sub_img_draw, rtSubErrRgn, CV_RGB(0, 255, 255), 2); //
                     Rect rtDraw = rt;//chips
-                    rtDraw.x += vRois_Small[i].x + vRois[k].x - inflate; //rtDraw.x¿¡ vRois[k].xÀüÃ¼ Å©±â Áß°£ °´Ã¼ ÃßÃâ ÁÂÇ¥¸¦ ´õÇÏ°í ¼¼ºÎ°´Ã¼ xÁÂÇ¥ vRois_Small[i].x¸¦ ´ã¾Æ Åõ°úÀûÀ¸·Î ÇØ´ç ¼¼ºÎ°´Ã¼ xÁÂÇ¥¸¦ Á÷Á¢ÀûÀ¸·Î °¡¸®Å°°Ô µÊ.
+                    rtDraw.x += vRois_Small[i].x + vRois[k].x - inflate; //rtDraw.xï¿½ï¿½ vRois[k].xï¿½ï¿½Ã¼ Å©ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½Î°ï¿½Ã¼ xï¿½ï¿½Ç¥ vRois_Small[i].xï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Î°ï¿½Ã¼ xï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½.
                     rtDraw.y += vRois_Small[i].y + vRois[k].y;
                     vRois_Small_Err.push_back(rtDraw);
                     cv::rectangle(sub_img_draw, rrt.boundingRect(), CV_RGB(255, 0, 0), 2); //
-                    //»öÄ¥ÇÒ Ä­ ±â¾ïÇÏ±â 
+                    //ï¿½ï¿½Ä¥ï¿½ï¿½ Ä­ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ 
                     remember.push_back(k);
                 }
             }
         }
         if (remember.size() > 0)
         {
-            //»öÄ¥ÇÒ Ä­ ±â¾ïÇÏ±â 
+            //ï¿½ï¿½Ä¥ï¿½ï¿½ Ä­ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ 
             remeber_con.push_back(vRois[k]);
             remember.clear();
         }
@@ -211,7 +211,7 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
     {
         string msg;
         msg = to_string(con_num + 1);
-        // »ç°¢Çü ³»ºÎÀÇ ÇÈ¼¿ »ö»ó È®ÀÎ
+        // ï¿½ç°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½È¼ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         cv::Scalar currentPixelColor = drawColor.at<cv::Vec3b>(remeber_con[i].y + remeber_con[i].height / 2,
             remeber_con[i].x + remeber_con[i].width / 2);
         if (currentPixelColor == CV_RGB(255, 0, 0) || currentPixelColor == CV_RGB(255, 255, 0))
@@ -225,7 +225,7 @@ int InspectContamination::OnTestProcess(const Mat& src, const Mat& drawColor, st
             cv::putText(drawColor, msg, remeber_con[i].br(), FONT_HERSHEY_SIMPLEX, 1, color, 2, 8);		//0, 255, 255
             cv::putText(drawColor, contamination, remeber_con[i].tl(), FONT_HERSHEY_SIMPLEX, 0.5, color, 1.5, 8);
             cv::rectangle(drawColor, remeber_con[i], color, CV_FILLED);
-            flaw_num += 1;      // °áÇÔ °³¼ö Áõ°¡ 
+            flaw_num += 1;      // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
         }
     }
     return 0;

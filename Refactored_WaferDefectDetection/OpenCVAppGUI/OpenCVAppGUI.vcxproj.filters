@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="CannyEdgeDetector">
+      <UniqueIdentifier>{d6ad39b8-8573-42a9-9387-3c7fc2cb4bd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InspectClass">
+      <UniqueIdentifier>{20c790cc-9d51-4b1f-ada4-c2d90de2fa0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{de2b3db8-f896-46e7-b08c-6915a91e047c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="OpenCVAppGUI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenCVAppGUIDlg.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="canny.h">
+      <Filter>CannyEdgeDetector</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="InspGeneric.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Inspection.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectContamination.h">
+      <Filter>InspectClass</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectCrack.h">
+      <Filter>InspectClass</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectQR.h">
+      <Filter>InspectClass</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectScratch.h">
+      <Filter>InspectClass</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectYield.h">
+      <Filter>InspectClass</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OpenCVAppGUI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenCVAppGUIDlg.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="canny.cpp">
+      <Filter>CannyEdgeDetector</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectContamination.cpp">
+      <Filter>InspectClass</Filter>
+    </ClCompile>
+    <ClCompile Include="InspGeneric.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Inspection.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectCrack.cpp">
+      <Filter>InspectClass</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectQR.cpp">
+      <Filter>InspectClass</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectScratch.cpp">
+      <Filter>InspectClass</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectYield.cpp">
+      <Filter>InspectClass</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OpenCVAppGUI.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\OpenCVAppGUI.rc2">
+      <Filter>리소스 파일</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\OpenCVAppGUI.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
